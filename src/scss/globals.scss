@@ -20,6 +20,20 @@
     opacity: 0;
 }
 
+.fade-page-enter-active,
+.fade-page-leave-active {
+    transition: opacity 0.3s, transform 0.3s ease-in-out;
+}
+
+.fade-page-enter-from {
+    opacity: 0;
+    transform: translateX(300px);
+}
+.fade-page-leave-to {
+    opacity: 0;
+    transform: translateX(-300px);
+}
+
 .fade-slow-enter-active,
 .fade-slow-leave-active {
     transition: opacity 1.9s;
