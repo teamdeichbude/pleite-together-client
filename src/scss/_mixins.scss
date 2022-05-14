@@ -1,0 +1,111 @@
+@use 'sass:math';
+
+@mixin text-outline {
+    text-shadow: -1px -1px 0 $color-black, 1px -1px 0 $color-black, -1px 1px 0 $color-black, 1px 1px 0 $color-black,
+        2px 3px 5px $color-black !important;
+}
+
+@mixin no-select {
+    -webkit-touch-callout: none;
+
+    /* iOS Safari */
+    -webkit-user-select: none;
+
+    /* Safari */
+    -khtml-user-select: none;
+
+    /* Konqueror HTML */
+    -moz-user-select: none;
+
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+
+    /* Internet Explorer/Edge */
+    user-select: none;
+
+    /* Non-prefixed version, currently
+      supported by Chrome, Edge, Opera and Firefox */
+}
+
+@mixin override-button-defaults {
+    display: inline-block;
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    border-spacing: 0;
+    font-weight: normal;
+    line-height: 1.42rem;
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    text-decoration: none;
+    text-indent: 0;
+}
+
+// this function returns the rem size for the supplied px value
+// for matching the px values used in photoshop previews
+// make sure to set the psd-dpi to the dpi-Setting of the photoshop-document (default is 72)
+@function calculate-rem($size) {
+    //size has to be numeric pt value
+    //root font size should be 16px;
+    $psd-dpi: 72;
+
+    $remSize: $size * 0.083333396325467 * (math.div($psd-dpi, 96));
+
+    @return #{$remSize}rem;
+}
+
+@mixin main-font-bold($ptSize: '') {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: normal;
+
+    @if $ptSize != '' {
+        font-size: calculate-rem($ptSize);
+    }
+}
+
+@mixin main-font-regular($ptSize: '') {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+
+    @if $ptSize != '' {
+        font-size: calculate-rem($ptSize);
+    }
+}
+
+@mixin set-selection-colors($foreground-color, $background-color) {
+    ::selection {
+        /* WebKit/Blink Browsers */
+        background: $background-color;
+        color: $foreground-color;
+    }
+
+    ::-moz-selection {
+        /* Gecko Browsers */
+        background: $background-color;
+        color: $foreground-color;
+    }
+}
+
+// this changes the scrollbars on most modern browsers... firefox might ignore the scrollbar width
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
+    // For Google Chrome
+    &::-webkit-scrollbar {
+        width: $size;
+        height: $size;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $foreground-color;
+        border-radius: math.div($size, 2);
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $background-color;
+    }
+
+    //for firefox
+    scrollbar-width: thin; // Firefox does not support custom scrollbar widths
+    scrollbar-width: $size;
+    scrollbar-color: $foreground-color $background-color;
+}

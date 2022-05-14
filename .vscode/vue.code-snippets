@@ -1,0 +1,36 @@
+{
+    "Setup Script": {
+        "scope": "vue",
+        "prefix": "<script",
+        "body": ["<script setup lang=\"ts\">", "\t${0}", "</script>", ""],
+        "description": "Typescript / Setup Composition API"
+    },
+    "Vue SFC Template": {
+        "scope": "vue",
+        "prefix": "<template",
+        "body": ["<template>", "\t${0}", "</template>", ""],
+        "description": "Vue SFC template tag"
+    },
+    "vue SFC  scss tag ": {
+        "scope": "vue",
+        "prefix": "<style",
+        "body": ["<style scoped lang=\"scss\">", "\t${0}", "</style>"],
+        "description": "Vue SFC scoped scss style tag"
+    },
+    "position: absolute": {
+        "scope": "scss, css, less",
+        "prefix": "posa",
+        "body": ["position: absolute;"]
+    },
+
+    "position: absolute fill parent": {
+        "scope": "scss, css, less",
+        "prefix": "posafull",
+        "body": ["position: absolute;", "width: 100%;", "height: 100%;", "top: 0;", "left: 0;"]
+    },
+    "position: absolute center in parent": {
+        "scope": "scss, css, less",
+        "prefix": "posacent",
+        "body": ["position: absolute;", "top: 50%;", "left: 50%;", "transform: translate(-50%, -50%);"]
+    }
+}

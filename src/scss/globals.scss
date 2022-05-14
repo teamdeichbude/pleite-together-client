@@ -1,0 +1,45 @@
+@import '@/scss/_mixins.scss';
+@import '@/scss/fonts.scss';
+
+@include set-selection-colors(white, blue);
+
+:root {
+    /*  font rem units are relative to this size. 
+    use @calculate-rem(number) to match photoshop pixel font values 
+    */
+    font-size: 16px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+.fade-slow-enter-active,
+.fade-slow-leave-active {
+    transition: opacity 1.9s;
+}
+
+.fade-slow-enter-from,
+.fade-slow-leave-to {
+    opacity: 0;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    /* Prevent font scaling in landscape while allowing user zoom */
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
