@@ -7,6 +7,8 @@
         "serve": "vite preview"
     },
     "dependencies": {
+        "material-design-icons": "^3.0.1",
+        "materialize-css": "^1.0.0-rc.2",
         "pinia": "^2.0.11",
         "vue": "^3.2.31"
     },
