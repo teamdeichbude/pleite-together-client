@@ -3,6 +3,12 @@
         <section class="section">
             <h1>Gruppe mit ID: {{ groupId }}</h1>
 
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large red scale-transition">
+                    <i class="large material-icons">mode_edit</i>
+                </a>
+            </div>
+
             <div class="row">
                 <div class="col s12">
                     <ul ref="tabsListEl" class="tabs">
@@ -27,8 +33,8 @@
 
                                     <div class="input-field col s7">
                                         <input
-                                            disabled
                                             id="copy-link-text-field"
+                                            disabled
                                             class="white-text"
                                             :value="registerLink"
                                             type="text"
@@ -37,8 +43,8 @@
                                     </div>
                                     <div class="input-field col s7">
                                         <input
-                                            disabled
                                             id="copy-link-text-field"
+                                            disabled
                                             class="white-text"
                                             :value="groupId"
                                             type="text"
@@ -78,11 +84,17 @@
     onMounted(() => {
         M.AutoInit();
 
-        if (tabsListEl.value) M.Tabs.init(tabsListEl.value, {});
+        if (tabsListEl.value) {
+            M.Tabs.init(tabsListEl.value, {});
+        }
     });
 </script>
 
 <style scoped lang="scss">
+    .fixed-action-btn {
+        right: 15%;
+        bottom: 50%;
+    }
     .invite-card {
         display: flex;
         align-items: center;
