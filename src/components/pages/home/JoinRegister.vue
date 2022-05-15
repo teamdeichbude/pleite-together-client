@@ -2,7 +2,7 @@
     <section class="section">
         <div class="row">
             <div class="input-field col s6">
-                <input id="access-code" @keypress="onKeypress" type="text" v-model="accessCode" class="validate" />
+                <input id="access-code" v-model="accessCode" type="text" class="validate" @keypress="onKeypress" />
                 <label for="access-code">Accesscode</label>
                 <span class="helper-text">Gib deinen Zugangscode ein</span>
             </div>
@@ -10,10 +10,10 @@
                 <router-link
                     ref="submitCodeLink"
                     type="submit"
-                    :to="`/kasse-${accessCode}`"
+                    :to="`/gruppe-${accessCode}`"
                     class="waves-effect waves-light btn"
                 >
-                    <i class="material-icons left">subdirectory_arrow_right</i>Einer Kasse beitreten
+                    <i class="material-icons left">subdirectory_arrow_right</i>Einer Gruppe beitreten
                 </router-link>
             </div>
         </div>

@@ -21,9 +21,11 @@ module.exports = {
     ignorePatterns: ['.eslintrc.js', 'vite.config.ts'],
     rules: {
         // override/add rules settings here, such as:
-        // 'vue/no-unused-vars': 'error',
+        'no-unused-vars': 'warn',
         curly: 'error',
         'no-nested-ternary': 'error',
+
+        'vue/max-len': 'off',
 
         'max-len': [
             'warn',
@@ -118,7 +120,7 @@ module.exports = {
                 ],
                 'vue/no-v-html': ['off'],
                 'vue/max-len': [
-                    'error',
+                    'warn',
                     {
                         code: 120,
                         template: 120,
@@ -126,13 +128,13 @@ module.exports = {
                         comments: 120,
                         ignorePattern: '',
                         ignoreComments: false,
-                        ignoreTrailingComments: false,
+                        ignoreTrailingComments: true,
                         ignoreUrls: true,
                         ignoreStrings: true,
-                        ignoreTemplateLiterals: false,
+                        ignoreTemplateLiterals: true,
                         ignoreRegExpLiterals: false,
                         ignoreHTMLAttributeValues: true,
-                        ignoreHTMLTextContents: false,
+                        ignoreHTMLTextContents: true,
                     },
                 ],
                 '@typescript-eslint/naming-convention': [

@@ -1,7 +1,7 @@
 <template>
     <article class="container">
         <section class="section">
-            <h1>Kasse mit ID: {{ registerId }}</h1>
+            <h1>Gruppe mit ID: {{ groupId }}</h1>
 
             <div class="row">
                 <div class="col s12">
@@ -40,7 +40,7 @@
                                             disabled
                                             id="copy-link-text-field"
                                             class="white-text"
-                                            :value="registerId"
+                                            :value="groupId"
                                             type="text"
                                         />
                                         <span class="helper-text teal-text text-lighten-3">Beitritts-Code</span>
@@ -66,13 +66,13 @@
     const route = useRoute();
 
     const registerLink = computed(() => {
-        return `${window.location.protocol}//${window.location.host}/kasse-${route.params.registerId}`;
+        return `${window.location.protocol}//${window.location.host}/gruppe-${route.params.groupId}`;
     });
 
     const tabsListEl: Ref<HTMLUListElement | undefined> = ref();
 
-    const registerId = computed(() => {
-        return route.params.registerId;
+    const groupId = computed(() => {
+        return route.params.groupId;
     });
 
     onMounted(() => {

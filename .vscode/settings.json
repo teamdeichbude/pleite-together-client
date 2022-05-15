@@ -1,7 +1,5 @@
 {
-
     "editor.codeActionsOnSave": ["source.fixAll.eslint"],
-
 
     "editor.formatOnSave": true, // runs pretter on save
 
@@ -25,17 +23,9 @@
     "eslint.lintTask.enable": true, // you can run eslint for all files: F1 > Run Task > eslint: lint whole folder
     "eslint.validate": ["typescript", "javascript"],
 
-    // override eslint user options for this workspace
-    "eslint.options": {
-        "rules": {}
-    },
     "typescript.preferences.quoteStyle": "single",
-    
+
     "volar.completion.preferredTagNameCase": "kebab",
     "volar.completion.autoImportComponent": true,
-    "volar.completion.preferredAttrNameCase": "auto-kebab",
-
-    
-
-  
+    "volar.completion.preferredAttrNameCase": "auto-kebab"
 }
