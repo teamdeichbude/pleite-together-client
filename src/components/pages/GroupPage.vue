@@ -18,7 +18,7 @@
                     </ul>
                 </div>
                 <div id="test1" class="col s12">
-                    <h2>Hier kommt die Liste</h2>
+                    <expense-list :group-invite="groupId" />
                 </div>
                 <div id="test2" class="col s12">Test 2</div>
                 <div id="test3" class="col s12">
@@ -62,12 +62,13 @@
 </template>
 
 <script setup lang="ts">
-    import { computed } from '@vue/reactivity';
+    import { computed, ComputedRef } from '@vue/reactivity';
     import { useRoute } from 'vue-router';
     import M from 'materialize-css';
     import { onMounted, ref, Ref } from 'vue';
 
     import QrcodeVue from 'qrcode.vue';
+    import ExpenseList from './group-page/ExpenseList.vue';
 
     const route = useRoute();
 
@@ -77,9 +78,15 @@
 
     const tabsListEl: Ref<HTMLUListElement | undefined> = ref();
 
-    const groupId = computed(() => {
-        return route.params.groupId;
+    const groupId: ComputedRef<string> = computed(() => {
+        return route.params.groupId.toString();
     });
+
+    // function loadGroupData() {
+    //     fetch(`http://localhost:3001/groups/${groupId.value}/expenses`)
+    //         .then((response) => response.json())
+    //         .then((data) => (groupExpenses.value = data));
+    // }
 
     onMounted(() => {
         M.AutoInit();
@@ -87,6 +94,8 @@
         if (tabsListEl.value) {
             M.Tabs.init(tabsListEl.value, {});
         }
+
+        // loadGroupData();
     });
 </script>
 
@@ -95,6 +104,16 @@
         right: 15%;
         bottom: 50%;
     }
+
+    .expense-list {
+        li {
+            display: flex;
+            width: 80%;
+            justify-content: space-between;
+            text-align: left;
+        }
+    }
+
     .invite-card {
         display: flex;
         align-items: center;

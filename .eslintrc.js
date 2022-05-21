@@ -48,7 +48,7 @@ module.exports = {
             'error',
             {
                 selector: 'default',
-                format: ['camelCase'],
+                format: ['camelCase', 'snake_case'],
             },
             {
                 selector: 'variable',
@@ -62,7 +62,7 @@ module.exports = {
             {
                 selector: 'classProperty',
                 modifiers: ['readonly'],
-                format: ['UPPER_CASE', 'camelCase'],
+                format: ['UPPER_CASE', 'camelCase', 'snake_case'],
             },
             {
                 selector: 'parameter',
