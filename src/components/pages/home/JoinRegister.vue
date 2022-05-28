@@ -2,39 +2,58 @@
     <section class="section">
         <div class="row">
             <div class="input-field col s6">
-                <input id="access-code" v-model="accessCode" type="text" class="validate" @keypress="onKeypress" />
+                <input
+                    id="access-code"
+                    v-model="accessCode"
+                    :class="[{ invalid: errorMessage }, 'validate']"
+                    type="text"
+                    @keypress="onKeypress"
+                />
                 <label for="access-code">Accesscode</label>
-                <span class="helper-text">Gib deinen Zugangscode ein</span>
+                <span class="helper-text" :data-error="errorMessage">Gib deinen Zugangscode ein</span>
             </div>
             <div class="input-field col s6">
-                <router-link
+                <button
                     ref="submitCodeLink"
                     type="submit"
-                    :to="`/gruppe-${accessCode}`"
+                    :disabled="accessCode === ''"
                     class="waves-effect waves-light btn"
+                    @click.stop="accessGroup"
                 >
                     <i class="material-icons left">subdirectory_arrow_right</i>Einer Gruppe beitreten
-                </router-link>
+                </button>
             </div>
         </div>
     </section>
 </template>
 
 <script setup lang="ts">
+    import { access } from 'fs';
     import { Ref, ref } from 'vue';
     import { routerKey, useRouter } from 'vue-router';
 
     const router = useRouter();
     const accessCode = ref('');
+    const errorMessage = ref('');
 
     const submitCodeLink: Ref<undefined | any> = ref();
 
-    function onKeypress(e: KeyboardEvent) {
-        if (e.key === 'Enter') {
-            if (submitCodeLink.value) {
-                console.log(submitCodeLink.value);
-                router.push(submitCodeLink.value.to);
+    function accessGroup() {
+        errorMessage.value = '';
+
+        fetch(`http://localhost:3001/groups/${accessCode.value}/`).then((response) => {
+            if (response.status > 400) {
+                errorMessage.value = 'Zu diesem Code wurde keine Gruppe gefunden. Tippfehler?';
+                return false;
+            } else {
+                router.push(`/gruppe-${accessCode.value}`);
             }
+        });
+    }
+
+    function onKeypress(e: KeyboardEvent) {
+        if (e.key === 'Enter' && accessCode.value !== '') {
+            accessGroup();
         }
     }
 </script>
