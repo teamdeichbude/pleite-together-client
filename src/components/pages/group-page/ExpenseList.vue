@@ -28,10 +28,25 @@
         return internalInstance?.appContext.config.globalProperties.$moment(date).calendar();
     }
 
+    function laterExpenseDate(a, b) {
+        if (a.expense_paid_at < b.expense_paid_at) {
+            return 1;
+        }
+        if (a.expense_paid_at > b.expense_paid_at) {
+            return -1;
+        }
+        return 0;
+    }
+
     function fetchExpenses() {
         fetch(`http://localhost:3001/groups/${props.groupInvite}/expenses`)
             .then((response) => response.json())
-            .then((data) => (expenseList.value = data));
+            .then((data) => {
+                console.log(data);
+                const expenses = data.sort(laterExpenseDate);
+                console.log(expenses);
+                expenseList.value = expenses;
+            });
     }
 
     onMounted(() => {
