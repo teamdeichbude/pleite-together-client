@@ -1,7 +1,7 @@
 <template>
     <article class="container">
         <section class="section">
-            <h1>Hi! Let's be <em>pleite together!</em></h1>
+            <h1>Hi! Let's be <span class="emph">pleite together!</span></h1>
         </section>
         <div class="divider"></div>
         <join-register></join-register>
@@ -66,3 +66,9 @@
 <script setup lang="ts">
     import JoinRegister from './JoinRegister.vue';
 </script>
+
+<style scoped lang="scss">
+    .emph {
+        color: $primary-color;
+    }
+</style>

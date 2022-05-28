@@ -70,11 +70,12 @@ body {
 }
 
 h1 {
-    font-size: calculate-rem(42) !important;
+    font-size: calculate-rem(36) !important;
+    font-weight: 500;
 }
 
 h2 {
-    font-size: calculate-rem(36) !important;
+    font-size: calculate-rem(30) !important;
 }
 
 .btn {
