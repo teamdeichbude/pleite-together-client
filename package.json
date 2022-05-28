@@ -10,6 +10,7 @@
         "@types/materialize-css": "^1.0.11",
         "material-design-icons": "^3.0.1",
         "materialize-css": "^1.0.0-rc.2",
+        "moment": "^2.29.3",
         "pinia": "^2.0.11",
         "qrcode.vue": "^3.3.3",
         "vue": "^3.2.31",

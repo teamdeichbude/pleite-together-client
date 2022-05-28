@@ -7,9 +7,7 @@
             <li v-for="expense in expenseList" :key="expense.id" class="collection-item avatar">
                 <img src="https://via.placeholder.com/44x44" alt="" class="circle" />
                 <span class="title">{{ expense.title }}</span>
-                <p class="payer">
-                    {{ expense.member_name }}
-                </p>
+                <p class="payer">{{ displayDate(expense.expense_paid_at) }} by {{ expense.member_name }}</p>
                 <span class="secondary-content"><i class="material-icons">payment</i>{{ expense.amount }}€</span>
             </li>
         </ul>
@@ -19,11 +17,16 @@
 
 <script setup lang="ts">
     import Expense from '@/api-types/Expense';
-    import { onMounted, ref, Ref } from 'vue';
+    import { getCurrentInstance, onMounted, ref, Ref } from 'vue';
 
+    const internalInstance = getCurrentInstance();
     const props = defineProps<{ groupInvite: string }>();
 
     const expenseList: Ref<Expense[] | undefined> = ref();
+
+    function displayDate(date: string) {
+        return internalInstance?.appContext.config.globalProperties.$moment(date).calendar();
+    }
 
     function fetchExpenses() {
         fetch(`http://localhost:3001/groups/${props.groupInvite}/expenses`)
@@ -54,7 +57,7 @@
             }
             .payer {
                 &::before {
-                    content: ' – ';
+                    //content: ' – ';
                 }
             }
         }
