@@ -1,7 +1,11 @@
 <template>
     <article class="container">
         <section class="section">
-            <h1>hi</h1>
+            <h1>Hi! Let's be <em>pleite together!</em></h1>
+        </section>
+        <div class="divider"></div>
+        <join-register></join-register>
+        <section v-if="false" class="section">
             <div class="row create-register">
                 <button class="waves-effect waves-light btn disabled">
                     <i class="material-icons left">create_new_folder</i>Neue Gruppe erstellen
@@ -9,9 +13,8 @@
             </div>
         </section>
         <div class="divider"></div>
-        <join-register></join-register>
-        <div class="divider"></div>
-        <section class="section">
+
+        <section v-if="false" class="section">
             <div class="row">
                 <h5>Zuletzt auf diesem Gerät besuchte Gruppen</h5>
 

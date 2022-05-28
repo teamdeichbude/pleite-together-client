@@ -1,7 +1,7 @@
 <template>
     <div id="root" class="">
         <nav>
-            <div class="nav-wrapper teal darken-4">
+            <div class="nav-wrapper">
                 <div class="container">
                     <div class="col s12">
                         <router-link to="/" class="breadcrumb">Home</router-link>
@@ -12,19 +12,19 @@
                 </div>
             </div>
         </nav>
-        <main class="main-content teal lighten-5">
+        <main class="main-content">
             <router-view v-slot="{ Component }">
                 <transition name="fade-page" mode="out-in">
                     <component :is="Component" />
                 </transition>
             </router-view>
         </main>
-        <footer class="page-footer lime lighten-5">
+        <footer class="page-footer">
             <div class="container">
                 <div class="row">
                     <div class="col l6 s12">
-                        <h5 class="black-text">Pleite Together</h5>
-                        <p class="grey-text text-lighten-0">
+                        <h5>Pleite Together</h5>
+                        <p class="grey-text text-lighten-3">
                             Minim minim eu minim mollit ea id amet non ipsum culpa Lorem magna non. Nostrud deserunt
                             laborum cupidatat nulla est anim qui aute ea nulla qui commodo. Aliquip amet sint laboris
                             officia ipsum exercitation adipisicing do. Ut non mollit incididunt laboris nostrud et non
@@ -32,27 +32,25 @@
                         </p>
                     </div>
                     <div class="col l3 s12">
-                        <h5 class="black-text">Der Ernst des Lebens</h5>
+                        <h5>Der Ernst des Lebens</h5>
                         <ul>
-                            <li><router-link class="teal-text" to="/datenschutz">Datenschutz</router-link></li>
-                            <li><router-link class="teal-text" to="/impressum">Impressum</router-link></li>
+                            <li><router-link to="/datenschutz">Datenschutz</router-link></li>
+                            <li><router-link to="/impressum">Impressum</router-link></li>
                         </ul>
                     </div>
                     <div class="col l3 s12">
-                        <h5 class="black-text">Sonstiges</h5>
+                        <h5>Sonstiges</h5>
                         <ul>
                             <li>
-                                <a class="teal-text" href="#!">Lokale Daten löschen</a>
+                                <a href="#!">Lokale Daten löschen</a>
                             </li>
-                            <li><a class="teal-text" href="mailto:deichbu@lucaelsen.de">Kontakt</a></li>
+                            <li><a href="mailto:deichbu@lucaelsen.de">Kontakt</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="footer-copyright teal lighten-4">
-                <div class="container teal-text">
-                    Made with 💙<a class="teal-text text-lighten-0" href="https://deichbu.de">by deichbu.de</a>
-                </div>
+            <div class="footer-copyright">
+                <div class="container">Made with 💛 by <a href="https://deichbu.de">deichbu.de</a></div>
             </div>
         </footer>
     </div>
@@ -98,10 +96,18 @@
         padding: 0;
         overflow: hidden;
         max-width: 100vw;
+        background-color: $bg-color;
+    }
+
+    .nav-wrapper {
+        background-color: $header-bg-color;
     }
 
     .main-content {
-        flex-grow: 2;
+        flex-grow: 3;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
     }
 
     .footer {

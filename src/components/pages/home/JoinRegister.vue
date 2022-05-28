@@ -1,7 +1,7 @@
 <template>
     <section class="section">
         <div class="row">
-            <div class="input-field col s6">
+            <div class="input-field col s12 l6">
                 <input
                     id="access-code"
                     v-model="accessCode"
@@ -12,12 +12,11 @@
                 <label for="access-code">Accesscode</label>
                 <span class="helper-text" :data-error="errorMessage">Gib deinen Zugangscode ein</span>
             </div>
-            <div class="input-field col s6">
+            <div class="input-field col s12 l6">
                 <button
                     ref="submitCodeLink"
-                    type="submit"
                     :disabled="accessCode === ''"
-                    class="waves-effect waves-light btn"
+                    class="btn waves-effect waves-light"
                     @click.stop="accessGroup"
                 >
                     <i class="material-icons left">subdirectory_arrow_right</i>Einer Gruppe beitreten

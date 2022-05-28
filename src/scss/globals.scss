@@ -1,5 +1,6 @@
 @import '@/scss/_mixins.scss';
 @import '@/scss/fonts.scss';
+@import '/node_modules/materialize-css/sass/materialize.scss';
 
 @include set-selection-colors(white, blue);
 
@@ -66,4 +67,16 @@ body {
     padding: 0;
     width: 100%;
     overflow-x: hidden;
+}
+
+h1 {
+    font-size: calculate-rem(42) !important;
+}
+
+h2 {
+    font-size: calculate-rem(36) !important;
+}
+
+.btn {
+    background-color: $primary-color !important;
 }

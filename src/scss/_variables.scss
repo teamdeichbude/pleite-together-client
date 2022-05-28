@@ -1,0 +1,12 @@
+@use 'sass:color';
+$primary-color: #dc4e4f;
+$bg-color: #ffe8dc;
+$header-bg-color: #dc4e4f;
+
+$primary-color-light: color.scale($primary-color, $lightness: 30%) !default;
+$primary-color-dark: color.scale($primary-color, $lightness: -30%) !default;
+
+$secondary-color: $header-bg-color !default;
+$success-color: #4edcad !default;
+$error-color: #dc4e4f !default;
+$link-color: #eeeab5 !default;

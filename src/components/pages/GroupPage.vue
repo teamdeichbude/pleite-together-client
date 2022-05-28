@@ -4,17 +4,17 @@
             <h1>Gruppe mit ID: {{ groupId }}</h1>
 
             <div class="fixed-action-btn">
-                <a class="btn-floating btn-large red scale-transition">
-                    <i class="large material-icons">mode_edit</i>
+                <a class="btn-floating btn-large scale-transition">
+                    <i class="large material-icons">add</i>
                 </a>
             </div>
 
             <div class="row">
                 <div class="col s12">
                     <ul ref="tabsListEl" class="tabs">
-                        <li class="tab col s3"><a class="active" href="#test1">Zahlungen</a></li>
-                        <li class="tab col s3"><a href="#test2">Benutzer</a></li>
-                        <li class="tab col s3"><a href="#test3">Einstellungen</a></li>
+                        <li class="tab col s4"><a class="active" href="#test1">Zahlungen</a></li>
+                        <li class="tab col s4"><a href="#test2">Benutzer</a></li>
+                        <li class="tab col s4"><a href="#test3">Einstellungen</a></li>
                     </ul>
                 </div>
                 <div id="test1" class="col s12">
@@ -22,34 +22,22 @@
                 </div>
                 <div id="test2" class="col s12">Test 2</div>
                 <div id="test3" class="col s12">
-                    <h3>Nutzer hinzufügen</h3>
-                    <p>Lade nutzer mit über diesen Code / Link / QR-Code ein</p>
+                    <h2>Nutzer hinzufügen</h2>
+                    <p>Lade neue Leute über diesen Code / Link / QR-Code ein</p>
 
                     <div class="container">
                         <div class="row">
-                            <div class="card teal darken-4 col s10">
-                                <div class="invite-card card-content white-text">
+                            <div class="card col s12 l10">
+                                <div class="invite-card card-content">
                                     <qrcode-vue class="qr-code" :value="registerLink" :size="100" level="H" />
 
                                     <div class="input-field col s7">
-                                        <input
-                                            id="copy-link-text-field"
-                                            disabled
-                                            class="white-text"
-                                            :value="registerLink"
-                                            type="text"
-                                        />
-                                        <span class="helper-text teal-text text-lighten-3">Beitritts-Link</span>
+                                        <input id="copy-link-text-field" disabled :value="registerLink" type="text" />
+                                        <span class="helper-text">Beitritts-Link</span>
                                     </div>
                                     <div class="input-field col s7">
-                                        <input
-                                            id="copy-link-text-field"
-                                            disabled
-                                            class="white-text"
-                                            :value="groupId"
-                                            type="text"
-                                        />
-                                        <span class="helper-text teal-text text-lighten-3">Beitritts-Code</span>
+                                        <input id="copy-link-text-field" disabled :value="groupId" type="text" />
+                                        <span class="helper-text">Beitritts-Code</span>
                                     </div>
                                 </div>
                             </div>
@@ -101,8 +89,8 @@
 
 <style scoped lang="scss">
     .fixed-action-btn {
-        right: 15%;
-        bottom: 50%;
+        right: 10%;
+        bottom: 10%;
     }
 
     .expense-list {
@@ -119,7 +107,7 @@
         align-items: center;
         justify-content: space-between;
         .qr-code {
-            background-color: #009688;
+            background-color: $primary-color-light;
             padding: 5px;
         }
     }
