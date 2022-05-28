@@ -41,12 +41,7 @@
     function fetchExpenses() {
         fetch(`http://localhost:3001/groups/${props.groupInvite}/expenses`)
             .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                const expenses = data.sort(laterExpenseDate);
-                console.log(expenses);
-                expenseList.value = expenses;
-            });
+            .then((data) => (expenseList.value = data.sort(laterExpenseDate)));
     }
 
     onMounted(() => {
