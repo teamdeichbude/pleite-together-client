@@ -61,10 +61,6 @@
     import M from 'materialize-css';
     import { useRoute } from 'vue-router';
 
-    onMounted(() => {
-        M.AutoInit();
-    });
-
     const route = useRoute();
 
     const crumbs = computed(() => {

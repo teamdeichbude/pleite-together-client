@@ -3,11 +3,7 @@
         <section class="section">
             <h1>Gruppe mit ID: {{ groupId }}</h1>
 
-            <div class="fixed-action-btn">
-                <a class="btn-floating btn-large scale-transition">
-                    <i class="large material-icons">add</i>
-                </a>
-            </div>
+            <new-expense :group-code="groupId"></new-expense>
 
             <div class="row">
                 <div class="col s12">
@@ -57,6 +53,7 @@
 
     import QrcodeVue from 'qrcode.vue';
     import ExpenseList from './group-page/ExpenseList.vue';
+    import NewExpense from './group-page/NewExpense.vue';
 
     const route = useRoute();
 
@@ -77,8 +74,6 @@
     // }
 
     onMounted(() => {
-        M.AutoInit();
-
         if (tabsListEl.value) {
             M.Tabs.init(tabsListEl.value, {});
         }
