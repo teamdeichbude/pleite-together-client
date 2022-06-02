@@ -16,7 +16,9 @@
                 <div id="test1" class="col s12">
                     <expense-list :group-invite="groupId" />
                 </div>
-                <div id="test2" class="col s12">Test 2</div>
+                <div id="test2" class="col s12">
+                    <member-list :group-invite="groupId"></member-list>
+                </div>
                 <div id="test3" class="col s12">
                     <h2>Nutzer hinzufügen</h2>
                     <p>Lade neue Leute über diesen Code / Link / QR-Code ein</p>
@@ -54,6 +56,7 @@
     import QrcodeVue from 'qrcode.vue';
     import ExpenseList from './group-page/ExpenseList.vue';
     import NewExpense from './group-page/NewExpense.vue';
+    import MemberList from './group-page/MemberList.vue';
 
     const route = useRoute();
 

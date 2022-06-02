@@ -111,8 +111,6 @@
     let datePickerInstance;
 
     const paidAtISODateTimeString = computed(() => {
-        console.log(paidAtDate.value); // dd.MM.yy
-        console.log(paidAtTime.value);
         const theDate = new Date(datePickerInstance.date.toDateString() + ' ' + paidAtTime.value);
         return theDate.toISOString();
     });
@@ -140,7 +138,7 @@
     function addNewExpense() {
         let error = false;
         const requestBody = {
-            amount: amount.value,
+            amount: amount.value * 100,
             title: title.value,
             paidAt: paidAtISODateTimeString.value,
         };
