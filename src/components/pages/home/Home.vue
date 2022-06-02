@@ -4,7 +4,6 @@
             <h1>Hi! Let's be <span class="emph">pleite together!</span></h1>
         </section>
 
-        <input id="bla" ref="datepickerEl" type="text" class="datepicker" />
         <div class="divider"></div>
         <join-register></join-register>
         <section v-if="false" class="section">
