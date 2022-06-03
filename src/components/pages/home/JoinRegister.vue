@@ -40,7 +40,7 @@
     function accessGroup() {
         errorMessage.value = '';
 
-        fetch(`http://localhost:3001/groups/${accessCode.value}/`).then((response) => {
+        fetch(`${import.meta.env.VITE_API_HOST}/groups/${accessCode.value}/`).then((response) => {
             if (response.status > 400) {
                 errorMessage.value = 'Zu diesem Code wurde keine Gruppe gefunden. Tippfehler?';
                 return false;

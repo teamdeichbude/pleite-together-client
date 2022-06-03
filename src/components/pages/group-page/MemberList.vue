@@ -47,7 +47,7 @@
     let expensesByMemberId: Ref<number[] | undefined> = ref();
 
     function fetchMembers() {
-        fetch(`http://localhost:3001/groups/${props.groupInvite}/members`)
+        fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupInvite}/members`)
             .then((response) => {
                 return response.json();
             })
@@ -59,7 +59,7 @@
     }
 
     function fetchExpenses() {
-        fetch(`http://localhost:3001/groups/${props.groupInvite}/expenses`)
+        fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupInvite}/expenses`)
             .then((response) => response.json())
             .then((data) => {
                 data.forEach(function (expense) {

@@ -8,9 +8,9 @@
             <div class="row">
                 <div class="col s12">
                     <ul ref="tabsListEl" class="tabs">
-                        <li class="tab col s4"><a class="active" href="#test1">Zahlungen</a></li>
-                        <li class="tab col s4"><a href="#test2">Benutzer</a></li>
-                        <li class="tab col s4"><a href="#test3">Einstellungen</a></li>
+                        <li class="tab col s4"><a class="active" href="#test1">Ausgaben</a></li>
+                        <li class="tab col s4"><a href="#test2">Beteiligte</a></li>
+                        <li class="tab col s4"><a href="#test3">Einladen</a></li>
                     </ul>
                 </div>
                 <div id="test1" class="col s12">
@@ -70,18 +70,10 @@
         return route.params.groupId.toString();
     });
 
-    // function loadGroupData() {
-    //     fetch(`http://localhost:3001/groups/${groupId.value}/expenses`)
-    //         .then((response) => response.json())
-    //         .then((data) => (groupExpenses.value = data));
-    // }
-
     onMounted(() => {
         if (tabsListEl.value) {
             M.Tabs.init(tabsListEl.value, {});
         }
-
-        // loadGroupData();
     });
 </script>
 

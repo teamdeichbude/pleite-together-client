@@ -5,6 +5,7 @@ import 'material-design-icons/iconfont/material-icons.css';
 import { routeConfiguration } from '@/router/RouteConfiguration';
 import { createRouter, createWebHistory } from 'vue-router';
 import moment from 'moment/min/moment-with-locales';
+
 moment.locale('de');
 
 const router = createRouter({

@@ -130,7 +130,7 @@
     members.value = [];
 
     function fetchGroupMembers() {
-        fetch(`http://localhost:3001/groups/${props.groupCode}/members`)
+        fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupCode}/members`)
             .then((response) => response.json())
             .then((data) => (members.value = data));
     }
@@ -152,7 +152,7 @@
         }
 
         if (!error) {
-            fetch(`http://localhost:3001/groups/${props.groupCode}/expenses`, {
+            fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupCode}/expenses`, {
                 method: 'POST',
                 headers: {
                     // eslint-disable-next-line @typescript-eslint/naming-convention
