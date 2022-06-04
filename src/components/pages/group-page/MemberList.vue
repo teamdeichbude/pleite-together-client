@@ -37,10 +37,9 @@
 
 <script setup lang="ts">
     import Member from '@/api-types/Member';
-    import { computed, getCurrentInstance, onMounted, ref, Ref } from 'vue';
+    import { computed, onMounted, ref, Ref } from 'vue';
     import BalanceTransaction from './BalanceTransaction';
 
-    const internalInstance = getCurrentInstance();
     const props = defineProps<{ groupInvite: string }>();
 
     const memberList: Ref<{ [key: string]: Member }> = ref({});
@@ -80,8 +79,6 @@
                 });
 
                 for (let key in memberList.value) {
-                    debugger;
-                    const index = Number.parseInt(key);
                     const member = memberList.value[key];
                     if (expensesByMemberId.value![member.id] === undefined) {
                         expensesByMemberId.value![member.id] = 0;
