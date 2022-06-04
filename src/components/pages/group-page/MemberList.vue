@@ -22,7 +22,7 @@
         <h3>Wer schuldet wem was?</h3>
         <ul>
             <li v-for="action in balanceTransactions" :key="action.key">
-                {{ memberList[action.payerId]?.name }} gibt {{ (-1 * action.amount) / 100 }} € an
+                {{ memberList[action.payerId]?.name }} gibt {{ ((-1 * action.amount) / 100).toFixed(2) }} € an
                 {{ memberList[action.getterId]?.name }}
             </li>
         </ul>
@@ -78,6 +78,15 @@
                         expensesByMemberId.value[index] = element / 100;
                     }
                 });
+
+                for (let key in memberList.value) {
+                    debugger;
+                    const index = Number.parseInt(key);
+                    const member = memberList.value[key];
+                    if (expensesByMemberId.value![member.id] === undefined) {
+                        expensesByMemberId.value![member.id] = 0;
+                    }
+                }
             })
             .finally(() => {
                 setTotalExpenseSum();
