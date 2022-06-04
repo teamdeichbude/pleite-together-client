@@ -11,7 +11,7 @@
 
         <!-- Modal Structure -->
         <div id="new-expense-modal" ref="sheetModal" class="modal bottom-sheet modal-fixed-footer">
-            <form>
+            <form ref="formEl">
                 <div class="modal-content">
                     <h4>Neue Ausagbe</h4>
                     <div class="row">
@@ -73,9 +73,10 @@
                                 <input
                                     id="paid_at_time"
                                     ref="timepickerEl"
-                                    v-model="paidAtTime"
+                                    :value="paidAtTime"
                                     type="text"
                                     class="timepicker"
+                                    @change="setTime"
                                 />
                             </div>
                         </div>
@@ -85,7 +86,7 @@
                     <input
                         type="submit"
                         role="submit"
-                        class="btn waves-effect waves-light"
+                        class="btn waves-effect waves-light modal-close"
                         value="Speichern"
                         @click="addNewExpense"
                     />
@@ -96,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref, computed } from 'vue';
+    import { onMounted, ref, computed, Ref, onUnmounted } from 'vue';
     import M from 'materialize-css';
 
     const props = defineProps<{ groupCode: string }>();
@@ -109,6 +110,7 @@
     const timepickerEl = ref();
     const sheetModal = ref();
     let datePickerInstance;
+    const formEl: Ref<HTMLFormElement | undefined> = ref();
 
     const paidAtISODateTimeString = computed(() => {
         const theDate = new Date(datePickerInstance.date.toDateString() + ' ' + paidAtTime.value);
@@ -126,6 +128,10 @@
     const time = new Date().toLocaleTimeString('de-DE', { hour12: false, hour: '2-digit', minute: '2-digit' });
     paidAtTime.value = time;
 
+    function setTime(event) {
+        paidAtTime.value = event.target.value;
+    }
+
     const members = ref();
     members.value = [];
 
@@ -137,6 +143,7 @@
 
     function addNewExpense() {
         let error = false;
+        console.log(paidAtISODateTimeString.value);
         const requestBody = {
             amount: amount.value * 100,
             title: title.value,
@@ -165,13 +172,29 @@
                 })
                 .catch((error) => {
                     console.log(error);
+                })
+                .finally(() => {
+                    window.location.reload();
                 });
         } else {
             console.log('error');
         }
     }
 
+    function preventFormSubmit(e: any) {
+        e.preventDefault();
+    }
+
+    onUnmounted(() => {
+        if (formEl.value) {
+            formEl.value.removeEventListener('submit', preventFormSubmit);
+        }
+    });
+
     onMounted(() => {
+        if (formEl.value) {
+            formEl.value.addEventListener('submit', preventFormSubmit);
+        }
         fetchGroupMembers();
 
         M.Modal.init(sheetModal.value, {});
