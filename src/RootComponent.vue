@@ -57,13 +57,12 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, onMounted } from 'vue';
-    import M from 'materialize-css';
+    import { computed, Ref } from 'vue';
     import { useRoute } from 'vue-router';
 
     const route = useRoute();
 
-    const crumbs = computed(() => {
+    const crumbs: Ref<any[]> = computed(() => {
         let pathArray = route.path.split('/');
         pathArray.shift();
         let breadcrumbs = pathArray.reduce((breadcrumbArray, path, idx) => {
