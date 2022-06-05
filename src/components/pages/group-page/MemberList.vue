@@ -143,16 +143,15 @@
 
         whileLoop: while (unbalanced && currentLoop < 200) {
             unbalanced = false;
-            modelExpensesByMemberId = JSON.parse(JSON.stringify(expensesByMemberId.value)).map((element) => {
-                if (element) {
-                    return Number(element.toFixed(2)) * 100;
-                }
-            });
-            modelWhoGetsHowMuch = JSON.parse(JSON.stringify(whoGetsHowMuch.value)).map((element) => {
-                if (element) {
-                    return Number(element.toFixed(2)) * 100;
-                }
-            });
+            modelExpensesByMemberId = { ...expensesByMemberId.value };
+            for (var key in modelExpensesByMemberId) {
+                modelExpensesByMemberId[key] = Number(modelExpensesByMemberId[key].toFixed(2)) * 100;
+            }
+
+            modelWhoGetsHowMuch = { ...whoGetsHowMuch.value };
+            for (var key in modelWhoGetsHowMuch) {
+                modelWhoGetsHowMuch[key] = Number(modelWhoGetsHowMuch[key].toFixed(2)) * 100;
+            }
 
             balanceActions.forEach((action) => {
                 modelExpensesByMemberId[action.payerId] -= action.amount;
@@ -258,7 +257,7 @@
                                         key: currentLoop,
                                         payerId: closestMatchMemberId,
                                         getterId: Number.parseInt(memberId),
-                                        amount: modelWhoGetsHowMuch[memberId],
+                                        amount: modelWhoGetsHowMuch[closestMatchMemberId],
                                     });
                                     currentLoop++;
                                     continue whileLoop;
