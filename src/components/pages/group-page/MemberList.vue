@@ -1,31 +1,33 @@
 <template>
     <div class="member-list-container">
         <h2>Beteiligte</h2>
+        <div v-if="loading">Loading ...</div>
+        <div v-else>
+            <ul class="members collection with-header">
+                <!--<li class="collection-header"><h4>Ausgaben</h4></li>-->
+                <li v-for="member in memberList" :key="member.id" class="collection-item">
+                    <div class="member-row">
+                        <span class="expense-title">{{ member.name }}</span>
+                        <span v-if="expensesByMemberId" class="title amount"
+                            ><i class="material-icons">payment</i> {{ expensesByMemberId[member.id] }} €</span
+                        >
+                    </div>
+                </li>
+            </ul>
 
-        <ul v-if="memberList" class="members collection with-header">
-            <!--<li class="collection-header"><h4>Ausgaben</h4></li>-->
-            <li v-for="member in memberList" :key="member.id" class="collection-item">
-                <div class="member-row">
-                    <span class="expense-title">{{ member.name }}</span>
-                    <span v-if="expensesByMemberId" class="title amount"
-                        ><i class="material-icons">payment</i> {{ expensesByMemberId[member.id] }} €</span
-                    >
-                </div>
-            </li>
-        </ul>
+            <h2>Offene Ausgleichszahlungen</h2>
+            <p>Gesamtausgaben: {{ totalExpenseSum }} €</p>
+            <p>Anzahl Beteiligte: {{ memberCount }}</p>
+            <p>Betrag pro Person: {{ amountPerPerson }}</p>
 
-        <h2>Offene Ausgleichszahlungen</h2>
-        <p>Gesamtausgaben: {{ totalExpenseSum }} €</p>
-        <p>Anzahl Beteiligte: {{ memberCount }}</p>
-        <p>Betrag pro Person: {{ amountPerPerson }}</p>
-
-        <h3>Wer schuldet wem was?</h3>
-        <ul>
-            <li v-for="action in balanceTransactions" :key="action.key">
-                {{ memberList[action.payerId]?.name }} gibt {{ ((-1 * action.amount) / 100).toFixed(2) }} € an
-                {{ memberList[action.getterId]?.name }}
-            </li>
-        </ul>
+            <h3>Wer schuldet wem was?</h3>
+            <ul>
+                <li v-for="action in balanceTransactions" :key="action.key">
+                    {{ memberList[action.payerId]?.name }} gibt {{ ((-1 * action.amount) / 100).toFixed(2) }} € an
+                    {{ memberList[action.getterId]?.name }}
+                </li>
+            </ul>
+        </div>
 
         <!-- <compensation-overview
             v-if="expensesByMemberId && memberList"
@@ -44,45 +46,45 @@
     type ExpenseByMemberRecord = { [memberId: number]: number };
 
     const apiStore = useApiStore();
+    let loading: Ref<boolean> = ref(true);
 
     const props = defineProps<{ groupInvite: string }>();
 
     const memberList: Ref<{ [key: string]: Member }> = ref({});
     let expensesByMemberId: Ref<ExpenseByMemberRecord | undefined> = ref();
 
-    onMounted(() => {
+    onMounted(async () => {
         expensesByMemberId.value = [];
-        apiStore.fetchMembers(props.groupInvite).then((memberListResult) => {
-            memberList.value = memberListResult;
-            apiStore.fetchExpenses(props.groupInvite).then((expenseListResult) => {
-                const expenseSumPerMemberId = {};
-                expenseListResult.forEach((expense) => {
-                    if (expenseSumPerMemberId[expense.member_id] === undefined) {
-                        expenseSumPerMemberId[expense.member_id] = 0;
-                    }
+        memberList.value = await apiStore.fetchMembers(props.groupInvite);
 
-                    expenseSumPerMemberId[expense.member_id] += expense.amount;
-                });
+        const expenseListResult = await apiStore.fetchExpenses(props.groupInvite);
+        const expenseSumPerMemberId = {};
+        expenseListResult.forEach((expense) => {
+            if (expenseSumPerMemberId[expense.member_id] === undefined) {
+                expenseSumPerMemberId[expense.member_id] = 0;
+            }
 
-                // not exactly sure why we don't have to divide by 100 here anymore but alright ...
-                // for (const memberId in expenseSumPerMemberId) {
-                //     expenseSumPerMemberId[memberId] = expenseSumPerMemberId[memberId] / 100;
-                // }
-
-                for (let key in memberList.value) {
-                    const member = memberList.value[key];
-                    if (expenseSumPerMemberId[member.id] === undefined) {
-                        expenseSumPerMemberId[member.id] = 0;
-                    }
-                }
-
-                expensesByMemberId.value = expenseSumPerMemberId;
-
-                setTotalExpenseSum();
-                setWhoGetsOrPaysHowMuch();
-                balanceAll();
-            });
+            expenseSumPerMemberId[expense.member_id] += expense.amount;
         });
+
+        // not exactly sure why we don't have to divide by 100 here anymore but alright ...
+        // for (const memberId in expenseSumPerMemberId) {
+        //     expenseSumPerMemberId[memberId] = expenseSumPerMemberId[memberId] / 100;
+        // }
+
+        for (let key in memberList.value) {
+            const member = memberList.value[key];
+            if (expenseSumPerMemberId[member.id] === undefined) {
+                expenseSumPerMemberId[member.id] = 0;
+            }
+        }
+
+        expensesByMemberId.value = expenseSumPerMemberId;
+
+        setTotalExpenseSum();
+        setWhoGetsOrPaysHowMuch();
+        balanceAll();
+        loading.value = false;
     });
 
     // stuff below here is for the compensation overview
