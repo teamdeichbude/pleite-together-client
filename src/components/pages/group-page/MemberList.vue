@@ -39,23 +39,14 @@
     import Member from '@/api-types/Member';
     import { computed, onMounted, ref, Ref } from 'vue';
     import BalanceTransaction from './BalanceTransaction';
+    import { useApiStore } from '@/stores/ApiStore';
+
+    const apiStore = useApiStore();
 
     const props = defineProps<{ groupInvite: string }>();
 
     const memberList: Ref<{ [key: string]: Member }> = ref({});
     let expensesByMemberId: Ref<number[] | undefined> = ref();
-
-    function fetchMembers() {
-        fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupInvite}/members`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                data.forEach((element) => {
-                    memberList.value[element.id] = element;
-                });
-            });
-    }
 
     function fetchExpenses() {
         fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupInvite}/expenses`)
@@ -94,8 +85,10 @@
 
     onMounted(() => {
         expensesByMemberId.value = [];
-        fetchMembers();
-        fetchExpenses();
+        apiStore.getMembers(props.groupInvite).then((memberListResult) => {
+            memberList.value = memberListResult;
+            fetchExpenses();
+        });
     });
 
     // stuff below here is for the compensation overview
@@ -144,12 +137,12 @@
         whileLoop: while (unbalanced && currentLoop < 200) {
             unbalanced = false;
             modelExpensesByMemberId = { ...expensesByMemberId.value };
-            for (var key in modelExpensesByMemberId) {
+            for (let key in modelExpensesByMemberId) {
                 modelExpensesByMemberId[key] = Number(modelExpensesByMemberId[key].toFixed(2)) * 100;
             }
 
             modelWhoGetsHowMuch = { ...whoGetsHowMuch.value };
-            for (var key in modelWhoGetsHowMuch) {
+            for (let key in modelWhoGetsHowMuch) {
                 modelWhoGetsHowMuch[key] = Number(modelWhoGetsHowMuch[key].toFixed(2)) * 100;
             }
 
@@ -160,7 +153,7 @@
                 modelWhoGetsHowMuch[action.getterId] += action.amount;
             });
 
-            for (var memberId in modelWhoGetsHowMuch) {
+            for (let memberId in modelWhoGetsHowMuch) {
                 const amount: Number = modelWhoGetsHowMuch[memberId];
                 // okay, not perfect yet, at the moment we need to allow rounding errors of 1 Cent :(
                 if (amount !== undefined && amount !== null && amount > 1) {
