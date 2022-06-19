@@ -21,7 +21,10 @@
 
 <script setup lang="ts">
     import Expense from '@/api-types/Expense';
+    import { useApiStore } from '@/stores/ApiStore';
     import { getCurrentInstance, onMounted, ref, Ref } from 'vue';
+
+    const apiStore = useApiStore();
 
     const internalInstance = getCurrentInstance();
     const props = defineProps<{ groupInvite: string }>();
@@ -32,29 +35,14 @@
         return internalInstance?.appContext.config.globalProperties.$moment(date).calendar();
     }
 
-    function laterExpenseDate(a, b) {
-        if (a.expense_paid_at < b.expense_paid_at) {
-            return 1;
-        }
-        if (a.expense_paid_at > b.expense_paid_at) {
-            return -1;
-        }
-        return 0;
-    }
-
-    function fetchExpenses() {
-        fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupInvite}/expenses`)
-            .then((response) => response.json())
-            .then((data) => {
-                data.forEach(function (expense) {
-                    expense.amount = expense.amount / 100;
-                });
-                expenseList.value = data.sort(laterExpenseDate);
-            });
-    }
-
     onMounted(() => {
-        fetchExpenses();
+        apiStore.fetchExpenses(props.groupInvite).then(() => {
+            let list = apiStore.getExpensesSortedByExpenseDate;
+            list?.forEach((expense) => {
+                expense.amount = expense.amount / 100;
+            });
+            expenseList.value = apiStore.getExpensesSortedByExpenseDate;
+        });
     });
 </script>
 

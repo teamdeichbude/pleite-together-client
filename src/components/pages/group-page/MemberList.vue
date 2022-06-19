@@ -41,53 +41,47 @@
     import BalanceTransaction from './BalanceTransaction';
     import { useApiStore } from '@/stores/ApiStore';
 
+    type ExpenseByMemberRecord = { [memberId: number]: number };
+
     const apiStore = useApiStore();
 
     const props = defineProps<{ groupInvite: string }>();
 
     const memberList: Ref<{ [key: string]: Member }> = ref({});
-    let expensesByMemberId: Ref<number[] | undefined> = ref();
+    let expensesByMemberId: Ref<ExpenseByMemberRecord | undefined> = ref();
 
-    function fetchExpenses() {
-        fetch(`${import.meta.env.VITE_API_HOST}/groups/${props.groupInvite}/expenses`)
-            .then((response) => response.json())
-            .then((data) => {
-                data.forEach(function (expense) {
-                    if (expensesByMemberId.value === undefined) {
-                        expensesByMemberId.value = [];
+    onMounted(() => {
+        expensesByMemberId.value = [];
+        apiStore.fetchMembers(props.groupInvite).then((memberListResult) => {
+            memberList.value = memberListResult;
+            apiStore.fetchExpenses(props.groupInvite).then((expenseListResult) => {
+                const expenseSumPerMemberId = {};
+                expenseListResult.forEach((expense) => {
+                    if (expenseSumPerMemberId[expense.member_id] === undefined) {
+                        expenseSumPerMemberId[expense.member_id] = 0;
                     }
-                    if (expensesByMemberId.value[expense.member_id] === undefined) {
-                        expensesByMemberId.value[expense.member_id] = 0;
-                    }
-                    const newAmount: number = Number(expense.amount);
-                    expensesByMemberId.value[expense.member_id] =
-                        expensesByMemberId.value[expense.member_id] + newAmount;
+
+                    expenseSumPerMemberId[expense.member_id] += expense.amount;
                 });
-                expensesByMemberId?.value?.forEach((element: number, index) => {
-                    if (expensesByMemberId.value) {
-                        expensesByMemberId.value[index] = element / 100;
-                    }
-                });
+
+                // not exactly sure why we don't have to divide by 100 here anymore but alright ...
+                // for (const memberId in expenseSumPerMemberId) {
+                //     expenseSumPerMemberId[memberId] = expenseSumPerMemberId[memberId] / 100;
+                // }
 
                 for (let key in memberList.value) {
                     const member = memberList.value[key];
-                    if (expensesByMemberId.value![member.id] === undefined) {
-                        expensesByMemberId.value![member.id] = 0;
+                    if (expenseSumPerMemberId[member.id] === undefined) {
+                        expenseSumPerMemberId[member.id] = 0;
                     }
                 }
-            })
-            .finally(() => {
+
+                expensesByMemberId.value = expenseSumPerMemberId;
+
                 setTotalExpenseSum();
                 setWhoGetsOrPaysHowMuch();
                 balanceAll();
             });
-    }
-
-    onMounted(() => {
-        expensesByMemberId.value = [];
-        apiStore.getMembers(props.groupInvite).then((memberListResult) => {
-            memberList.value = memberListResult;
-            fetchExpenses();
         });
     });
 
@@ -109,19 +103,19 @@
 
     function setTotalExpenseSum() {
         totalExpenseSum.value = 0;
-        expensesByMemberId.value?.forEach((element) => {
-            if (element && totalExpenseSum && totalExpenseSum.value !== undefined) {
-                totalExpenseSum.value += element * 100;
+        for (const memberId in expensesByMemberId.value) {
+            if (expensesByMemberId.value[memberId] && totalExpenseSum && totalExpenseSum.value !== undefined) {
+                totalExpenseSum.value += expensesByMemberId.value[memberId] * 100;
             }
-        });
+        }
         totalExpenseSum.value = totalExpenseSum.value / 100;
     }
 
     function setWhoGetsOrPaysHowMuch() {
-        expensesByMemberId.value?.forEach((paid, memberId) => {
-            let gettingAmount = paid - amountPerPerson.value;
+        for (const memberId in expensesByMemberId.value) {
+            let gettingAmount = expensesByMemberId.value[memberId] - amountPerPerson.value;
             whoGetsHowMuch.value[memberId] = gettingAmount;
-        });
+        }
     }
 
     function balanceAll() {
