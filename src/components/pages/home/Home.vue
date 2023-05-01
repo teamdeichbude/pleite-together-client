@@ -8,7 +8,7 @@
         <join-register></join-register>
         <section v-if="false" class="section">
             <div class="row create-register">
-                <button class="waves-effect waves-light btn disabled">
+                <button class="waves-effect waves-light btn" @click="$router.push(`/new-group`)">
                     <i class="material-icons left">create_new_folder</i>Neue Gruppe erstellen
                 </button>
             </div>
