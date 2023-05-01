@@ -9,8 +9,11 @@
                     <span class="title amount"><i class="material-icons">payment</i>{{ expense.amount }}€</span>
                     <span class="expense-title">{{ expense.title }}</span>
                     <p class="payer">
-                        {{ displayDate(expense.expense_paid_at) }} by
-                        <span class="name">{{ expense.member_name }}</span>
+                        {{ displayDate(expense.expense_paid_at) }}
+                        <span v-if="expense.receiving_member_name" class="name">
+                            Von {{ expense.member_name }} an {{ expense.receiving_member_name }}</span
+                        >
+                        <span v-else>by {{ expense.member_name }}</span>
                     </p>
                 </div>
             </li>
