@@ -1,9 +1,12 @@
 {
     "name": "pleite-together-client",
-    "version": "0.0.10",
+    "version": "2.0.0",
     "scripts": {
         "dev": "vite",
-        "build": "npm version patch && vue-tsc --noEmit && vite build",
+        "patch": "npm version patch",
+        "minor": "npm version patch",
+        "major": "npm version patch",
+        "build": "vue-tsc --noEmit && vite build",
         "serve": "vite preview"
     },
     "dependencies": {
