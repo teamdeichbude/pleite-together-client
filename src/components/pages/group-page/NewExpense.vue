@@ -13,7 +13,15 @@
         <div id="new-expense-modal" ref="sheetModal" class="modal bottom-sheet modal-fixed-footer">
             <form ref="formEl">
                 <div class="modal-content">
-                    <h4>Neue Ausagbe</h4>
+                    <h4>Neuer Eintrag</h4>
+                    <div class="row">
+                        <label>Art</label>
+                        <select v-model="expenseType" class="browser-default" required>
+                            <option v-for="(type, key) in availableTypes" :key="key" :value="type">
+                                {{ type }}
+                            </option>
+                        </select>
+                    </div>
                     <div class="row">
                         <div class="row valign-wrapper">
                             <div class="input-field col s10">
@@ -40,11 +48,17 @@
                                     class="validate"
                                     required
                                 />
-                                <label for="title">Wofür?</label>
+                                <label for="title">Weswegen?</label>
                             </div>
                         </div>
                         <div class="row">
-                            <label>Wer hat bezahlt?</label>
+                            <label
+                                >{{
+                                    expenseType === availableTypes.expense
+                                        ? 'Wer hat bezahlt?'
+                                        : 'Wer hat das Geld bekommen?'
+                                }}
+                            </label>
                             <select v-model="payer" class="browser-default" required>
                                 <option v-for="member in members" :key="member.id" :value="member.id">
                                     {{ member.name }}
@@ -58,6 +72,42 @@
                                 <label for="newName">Name der neuen Person</label>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <label for="within_group">
+                                <input id="within_group" v-model="withinGroup" type="checkbox" />
+                                <span>
+                                    {{
+                                        expenseType === availableTypes.expense
+                                            ? 'Geld ging an jemand anderen aus der Gruppe'
+                                            : 'Geld kam von jemand anderem aus der Gruppe'
+                                    }}</span
+                                ></label
+                            >
+                        </div>
+
+                        <div v-if="withinGroup" class="row">
+                            <label
+                                >{{
+                                    expenseType === availableTypes.income
+                                        ? 'Von wem kam das Geld?'
+                                        : 'Wer hat das Geld bekommen?'
+                                }}
+                            </label>
+                            <select v-model="receiver" class="browser-default" required>
+                                <option v-for="member in members" :key="member.id" :value="member.id">
+                                    {{ member.name }}
+                                </option>
+                                <option value="new">Neuen Namen eingeben</option>
+                            </select>
+                        </div>
+                        <div v-if="receiver && receiver == 'new'" class="row">
+                            <div class="input-field col s12">
+                                <input id="newNameReceiver" v-model="newNameReceiver" type="text" class="validate" />
+                                <label for="newNameReceiver">Name der neuen Person</label>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="input-field col s8">
                                 <input
@@ -67,7 +117,7 @@
                                     type="text"
                                     class="datepicker"
                                 />
-                                <label for="paid_at">Wann wurde bezahlt?</label>
+                                <label for="paid_at">Wann?</label>
                             </div>
                             <div class="input-field col s4">
                                 <input
@@ -109,6 +159,14 @@
     const datepickerEl = ref();
     const timepickerEl = ref();
     const sheetModal = ref();
+    const availableTypes = { expense: 'Ausgabe', income: 'Einnahme' };
+    const expenseType = ref();
+    expenseType.value = availableTypes.expense;
+
+    const withinGroup = ref();
+    const receiver = ref();
+    const newNameReceiver = ref();
+
     let datePickerInstance;
     const formEl: Ref<HTMLFormElement | undefined> = ref();
 
@@ -144,6 +202,16 @@
     function addNewExpense() {
         let error = false;
         console.log(paidAtISODateTimeString.value);
+
+        //the user can decide if he creates a within group transaction from the perspective of
+        //the payer or receiver. We will give it to the API always from the perspective of
+        //the payer.
+        const switchPayerAndReceiver = withinGroup.value && expenseType.value === 'Einnahme';
+        const newNameKey = switchPayerAndReceiver ? 'receivingMemberName' : 'newMemberName';
+        const payerKey = switchPayerAndReceiver ? 'receivingMemberId' : 'memberId';
+        const receiverKey = switchPayerAndReceiver ? 'memberId' : 'receivingMemberId';
+        const newNameReceiverKey = switchPayerAndReceiver ? 'newMemberName' : 'receivingMemberName';
+
         const requestBody = {
             amount: amount.value * 100,
             title: title.value,
@@ -151,11 +219,21 @@
         };
 
         if (newName.value) {
-            requestBody['newMemberName'] = newName.value;
-        } else if (payer.value !== 'new') {
-            requestBody['memberId'] = payer.value;
+            requestBody[newNameKey] = newName.value;
+        } else if (payer.value && payer.value !== 'new') {
+            requestBody[payerKey] = payer.value;
         } else {
             error = true;
+        }
+
+        if (withinGroup.value) {
+            if (receiver.value && receiver.value !== 'new') {
+                requestBody[receiverKey] = receiver.value;
+            } else if (receiver.value === 'new' && newNameReceiver.value) {
+                requestBody[newNameReceiverKey] = newNameReceiver.value;
+            } else {
+                error = true;
+            }
         }
 
         if (!error) {

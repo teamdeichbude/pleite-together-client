@@ -9,16 +9,16 @@
                     <div class="member-row">
                         <span class="expense-title">{{ member.name }}</span>
                         <span v-if="expensesByMemberId" class="title amount"
-                            ><i class="material-icons">payment</i> {{ expensesByMemberId[member.id] }} €</span
+                            ><i class="material-icons">payment</i> {{ expensesByMemberId[member.id] / 100 }} €</span
                         >
                     </div>
                 </li>
             </ul>
 
             <h2>Offene Ausgleichszahlungen</h2>
-            <p>Gesamtausgaben: {{ totalExpenseSum }} €</p>
+            <p>Gesamtausgaben: {{ totalExpenseSum / 100 }} €</p>
             <p>Anzahl Beteiligte: {{ memberCount }}</p>
-            <p>Betrag pro Person: {{ amountPerPerson }}</p>
+            <p>Betrag pro Person: {{ amountPerPerson / 100 }} €</p>
 
             <h3>Wer schuldet wem was?</h3>
             <ul>
@@ -28,12 +28,6 @@
                 </li>
             </ul>
         </div>
-
-        <!-- <compensation-overview
-            v-if="expensesByMemberId && memberList"
-            :expenses-by-member-id="expensesByMemberId"
-            :member-list="memberList"
-        ></compensation-overview> -->
     </div>
 </template>
 
@@ -53,31 +47,27 @@
     const memberList: Ref<{ [key: string]: Member }> = ref({});
     let expensesByMemberId: Ref<ExpenseByMemberRecord | undefined> = ref();
 
+    let totalExpenseSum: Ref<number> = ref(0);
+
     onMounted(async () => {
         expensesByMemberId.value = [];
         memberList.value = await apiStore.fetchMembers(props.groupInvite);
 
-        const expenseListResult = await apiStore.fetchExpenses(props.groupInvite);
         const expenseSumPerMemberId = {};
-        expenseListResult.forEach((expense) => {
-            if (expenseSumPerMemberId[expense.member_id] === undefined) {
-                expenseSumPerMemberId[expense.member_id] = 0;
-            }
-
-            expenseSumPerMemberId[expense.member_id] += expense.amount;
-        });
-
-        // not exactly sure why we don't have to divide by 100 here anymore but alright ...
-        // for (const memberId in expenseSumPerMemberId) {
-        //     expenseSumPerMemberId[memberId] = expenseSumPerMemberId[memberId] / 100;
-        // }
-
         for (let key in memberList.value) {
             const member = memberList.value[key];
-            if (expenseSumPerMemberId[member.id] === undefined) {
-                expenseSumPerMemberId[member.id] = 0;
-            }
+            expenseSumPerMemberId[member.id] = 0;
         }
+
+        const expenseListResult = await apiStore.fetchExpenses(props.groupInvite);
+        expenseListResult.forEach((expense) => {
+            expenseSumPerMemberId[expense.member_id] += expense.amount;
+            // Linked transactions are only returned once
+            // -> Need to manually add a second entry for the receiver
+            if (expense.receiving_member_id) {
+                expenseSumPerMemberId[expense.receiving_member_id] -= expense.amount;
+            }
+        });
 
         expensesByMemberId.value = expenseSumPerMemberId;
 
@@ -88,7 +78,6 @@
     });
 
     // stuff below here is for the compensation overview
-    let totalExpenseSum: Ref<number | undefined> = ref();
     let whoGetsHowMuch: Ref<number[]> = ref([]);
     let balanceTransactions: Ref<BalanceTransaction[] | undefined> = ref();
 
@@ -98,7 +87,7 @@
 
     const amountPerPerson: Ref<number> = computed(() => {
         if (totalExpenseSum.value) {
-            return Number.parseFloat((totalExpenseSum.value / memberCount.value).toFixed(2));
+            return Number.parseFloat((totalExpenseSum.value / memberCount.value).toFixed(0));
         }
         return 0;
     });
@@ -107,10 +96,9 @@
         totalExpenseSum.value = 0;
         for (const memberId in expensesByMemberId.value) {
             if (expensesByMemberId.value[memberId] && totalExpenseSum && totalExpenseSum.value !== undefined) {
-                totalExpenseSum.value += expensesByMemberId.value[memberId] * 100;
+                totalExpenseSum.value += expensesByMemberId.value[memberId];
             }
         }
-        totalExpenseSum.value = totalExpenseSum.value / 100;
     }
 
     function setWhoGetsOrPaysHowMuch() {
@@ -130,16 +118,16 @@
         let currentLoop = 1;
         let balanceActions: BalanceTransaction[] = [];
 
-        whileLoop: while (unbalanced && currentLoop < 200) {
+        whileLoop: while (unbalanced && currentLoop < 5000) {
             unbalanced = false;
             modelExpensesByMemberId = { ...expensesByMemberId.value };
             for (let key in modelExpensesByMemberId) {
-                modelExpensesByMemberId[key] = Number(modelExpensesByMemberId[key].toFixed(2)) * 100;
+                modelExpensesByMemberId[key] = Number(modelExpensesByMemberId[key].toFixed(2));
             }
 
             modelWhoGetsHowMuch = { ...whoGetsHowMuch.value };
             for (let key in modelWhoGetsHowMuch) {
-                modelWhoGetsHowMuch[key] = Number(modelWhoGetsHowMuch[key].toFixed(2)) * 100;
+                modelWhoGetsHowMuch[key] = Number(modelWhoGetsHowMuch[key].toFixed(2));
             }
 
             balanceActions.forEach((action) => {

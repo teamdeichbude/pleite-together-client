@@ -5,15 +5,25 @@
         <ul v-if="expenseList" class="expenses collection with-header">
             <!--<li class="collection-header"><h4>Ausgaben</h4></li>-->
             <li v-for="expense in expenseList" :key="expense.id" class="collection-item">
-                <div class="expense-row">
-                    <span class="title amount"><i class="material-icons">payment</i>{{ expense.amount }}€</span>
+                <div v-if="expense.receiving_member_name" class="expense-row">
+                    <span class="title amount"
+                        ><i class="material-icons">person</i><i class="material-icons">keyboard_arrow_right</i
+                        ><i class="material-icons">person</i>{{ toDecimalEuro(expense.amount) }}€</span
+                    >
                     <span class="expense-title">{{ expense.title }}</span>
                     <p class="payer">
                         {{ displayDate(expense.expense_paid_at) }}
-                        <span v-if="expense.receiving_member_name" class="name">
-                            Von {{ expense.member_name }} an {{ expense.receiving_member_name }}</span
-                        >
-                        <span v-else>by {{ expense.member_name }}</span>
+                        Von {{ expense.member_name }} an {{ expense.receiving_member_name }}
+                    </p>
+                </div>
+                <div v-else class="expense-row">
+                    <span class="title amount"
+                        ><i class="material-icons">payment</i>{{ toDecimalEuro(expense.amount) }}€</span
+                    >
+                    <span class="expense-title">{{ expense.title }}</span>
+                    <p class="payer">
+                        {{ displayDate(expense.expense_paid_at) }}
+                        by {{ expense.member_name }}
                     </p>
                 </div>
             </li>
@@ -40,13 +50,13 @@
 
     onMounted(() => {
         apiStore.fetchExpenses(props.groupInvite).then(() => {
-            let list = apiStore.getExpensesSortedByExpenseDate;
-            list?.forEach((expense) => {
-                expense.amount = expense.amount / 100;
-            });
             expenseList.value = apiStore.getExpensesSortedByExpenseDate;
         });
     });
+
+    function toDecimalEuro(value: number) {
+        return value / 100;
+    }
 </script>
 
 <style scoped lang="scss">
