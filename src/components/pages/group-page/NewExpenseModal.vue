@@ -319,6 +319,7 @@
 
             input {
                 width: 100%;
+                margin-bottom: 1rem;
             }
         }
     }

@@ -28,7 +28,7 @@
     const expenseList: Ref<Expense[] | undefined> = ref();
 
     onMounted(() => {
-        apiStore.fetchExpenses(props.groupInvite).then(() => {
+        apiStore.fetchExpenses(props.groupInvite, true).then(() => {
             expenseList.value = apiStore.getExpensesSortedByExpenseDate;
         });
     });

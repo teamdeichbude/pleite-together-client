@@ -6,7 +6,7 @@
                 <div class="card invite-card">
                     <qrcode-vue class="qr-code" :value="registerLink" :size="100" level="H" />
                     <hr />
-                    <div>Gruppencode: {{ groupId }}</div>
+                    <div>Zugangscode: {{ groupId }}</div>
                     <hr />
                     <div class="text-center">Link zur Gruppe: {{ registerLink }}</div>
                 </div>

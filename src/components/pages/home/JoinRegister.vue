@@ -2,16 +2,14 @@
     <section class="card gap-s">
         <input-field
             id="access-code"
-            label="Accesscode"
+            label="Zugangscode"
             :error-message="errorMessage"
             :model-value="accessCode"
             :on-keypress="onKeypress"
             @update:model-value="(newValue) => (accessCode = newValue)"
         ></input-field>
 
-        <button ref="submitCodeLink" :disabled="accessCode === ''" class="" @click.stop="accessGroup">
-            Zur Gruppe
-        </button>
+        <button ref="submitCodeLink" :disabled="accessCode === ''" @click.stop="accessGroup">Zur Gruppe</button>
     </section>
 </template>
 

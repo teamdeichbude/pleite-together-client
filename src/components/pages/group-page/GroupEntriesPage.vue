@@ -1,5 +1,5 @@
 <template>
-    <article v-if="!error" class="container">
+    <article v-if="!error" class="full-width">
         <new-expense-button :group-code="groupId"></new-expense-button>
 
         <expense-list :group-invite="groupId" />

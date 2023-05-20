@@ -1,23 +1,22 @@
 <template>
-    <div class="">
-        <button class="new-entry" @click="modalOpen = true">
+    <div>
+        <button class="new-entry" @click="uiStore.openModal">
             <i class="large material-icons">add</i> Neuer Eintrag
         </button>
         <new-expense-modal
             :group-code="groupCode"
-            :open="modalOpen"
-            @close-modal="modalOpen = false"
+            :open="uiStore.modalOpen"
+            @close-modal="uiStore.closeModal"
         ></new-expense-modal>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue';
+    import { useUiStore } from '@/stores/UiStore';
     import NewExpenseModal from './NewExpenseModal.vue';
 
+    const uiStore = useUiStore();
     const props = defineProps<{ groupCode: string }>();
-
-    const modalOpen = ref(false);
 </script>
 
 <style scoped lang="scss">

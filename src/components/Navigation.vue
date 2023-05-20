@@ -1,33 +1,35 @@
 <template>
-    <nav v-if="group">
-        <div class="nav-wrapper">
-            <div>
-                <router-link to="/"><i class="material-icons">arrow_back r</i></router-link>
+    <transition name="fade">
+        <nav v-if="group">
+            <div class="nav-wrapper">
+                <div>
+                    <router-link to="/"><i class="material-icons">arrow_back r</i></router-link>
+                </div>
+                <div>
+                    <span class="groupId">{{ group }}</span>
+                </div>
             </div>
-            <div>
-                <span class="groupId">{{ group }}</span>
+            <div v-if="group" class="nav-links">
+                <ul>
+                    <li>
+                        <router-link :to="{ name: 'entries', params: { groupId: useRoute().params.groupId } }"
+                            >Einträge</router-link
+                        >
+                    </li>
+                    <li>
+                        <router-link :to="{ name: 'settlement', params: { groupId: useRoute().params.groupId } }">
+                            Abrechnung</router-link
+                        >
+                    </li>
+                    <li>
+                        <router-link :to="{ name: 'invite', params: { groupId: useRoute().params.groupId } }"
+                            >Teilen</router-link
+                        >
+                    </li>
+                </ul>
             </div>
-        </div>
-        <div v-if="group" class="nav-links">
-            <ul>
-                <li>
-                    <router-link :to="{ name: 'entries', params: { groupId: useRoute().params.groupId } }"
-                        >Einträge</router-link
-                    >
-                </li>
-                <li>
-                    <router-link :to="{ name: 'settlement', params: { groupId: useRoute().params.groupId } }">
-                        Abrechnung</router-link
-                    >
-                </li>
-                <li>
-                    <router-link :to="{ name: 'invite', params: { groupId: useRoute().params.groupId } }"
-                        >Teilen</router-link
-                    >
-                </li>
-            </ul>
-        </div>
-    </nav>
+        </nav>
+    </transition>
 </template>
 
 <script lang="ts" setup>
@@ -37,8 +39,11 @@
 
     const group: ComputedRef<string | undefined> = computed(() => {
         if (useRoute().params.groupId) {
+            window.document.body.classList.toggle('whitebg', true);
             return useApiStore().group?.name ?? useApiStore().group?.code;
         }
+        window.document.body.classList.toggle('whitebg', false);
+
         return '';
     });
 </script>

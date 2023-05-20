@@ -1,19 +1,12 @@
 <template>
     <article class="container">
-        <section class="section">
-            <h1>Hi! Let's be pleite together!</h1>
-        </section>
+        <h1>Hi! Let's be pleite together!</h1>
 
-        <div class="divider"></div>
         <join-register></join-register>
-        <section v-if="false" class="section">
-            <div class="row create-register">
-                <button class="waves-effect waves-light btn" @click="$router.push(`/new-group`)">
-                    <i class="material-icons left">create_new_folder</i>Neue Gruppe erstellen
-                </button>
-            </div>
+
+        <section v-if="true" class="card-link">
+            <router-link :to="'/new-group'">Neue Gruppe erstellen</router-link>
         </section>
-        <div class="divider"></div>
 
         <section v-if="false" class="section">
             <div class="row">
@@ -65,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+    import { RouterLink } from 'vue-router';
     import JoinRegister from './JoinRegister.vue';
 </script>
 
@@ -72,5 +66,13 @@
     h1 {
         text-align: center;
         color: $font-light;
+    }
+
+    .card-link {
+        margin-top: 1rem;
+        text-align: center;
+        a {
+            color: $font-light;
+        }
     }
 </style>

@@ -1,39 +1,36 @@
 <template>
-    <article class="container">
-        <section class="section">
-            <div class="row">
-                <div class="input-field col s12 l6">
-                    <input
-                        id="access-code"
-                        v-model="accessCode"
-                        :class="[{ invalid: errorMessage }, 'validate']"
-                        type="text"
-                        @keypress="onKeypress"
-                    />
-                    <label for="access-code">6 stelliger Zugangscode</label>
-                    <span class="helper-text" :data-error="errorMessage"
-                        >Gib den 6-stelligen Zugangscode für deine Gruppe ein</span
-                    >
-                </div>
-                <div class="input-field col s12 l6">
-                    <button
-                        ref="submitCodeLink"
-                        :disabled="accessCode === ''"
-                        class="btn waves-effect waves-light"
-                        @click.stop="createGroup"
-                    >
-                        <i class="material-icons left">subdirectory_arrow_right</i>Gruppe erstellen
-                    </button>
-                </div>
-            </div>
-        </section>
+    <article class="full-width">
+        <h1>Neue Gruppe erstellen</h1>
+        <div class="card gap-s">
+            <input-field
+                id="group-code"
+                label="6 stelliger Zugangscode"
+                :on-keypress="onKeypress"
+                :model-value="accessCode"
+                :error-message="errorMessage"
+                @update:model-value="(newValue) => (accessCode = newValue)"
+            ></input-field>
+
+            <button
+                ref="submitCodeLink"
+                :disabled="accessCode === ''"
+                class="btn waves-effect waves-light"
+                @click.stop="createGroup"
+            >
+                Gruppe erstellen
+            </button>
+        </div>
+
+        <div class="card-link">
+            <router-link :to="'/'">Zurück zu Gruppe beitreten</router-link>
+        </div>
     </article>
 </template>
 
 <script setup lang="ts">
-    import { access } from 'fs';
     import { Ref, ref } from 'vue';
-    import { routerKey, useRouter } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
+    import InputField from '../InputField.vue';
 
     const router = useRouter();
     const accessCode = ref('');
@@ -79,3 +76,17 @@
         }
     }
 </script>
+
+<style scoped lang="scss">
+    h1 {
+        text-align: center;
+        color: $font-light;
+    }
+    .card-link {
+        margin-top: 1rem;
+        text-align: center;
+        a {
+            color: $font-light;
+        }
+    }
+</style>

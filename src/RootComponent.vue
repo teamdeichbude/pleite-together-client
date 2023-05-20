@@ -1,5 +1,5 @@
 <template>
-    <div id="root" class="">
+    <div id="root">
         <Navigation></Navigation>
         <main class="main-content">
             <router-view v-slot="{ Component }">
@@ -34,6 +34,16 @@
 
 <script lang="ts" setup>
     import Navigation from './components/Navigation.vue';
+    import { useUiStore } from '@/stores/UiStore';
+    import { watch } from 'vue';
+
+    const uiStore = useUiStore();
+    watch(
+        () => uiStore.modalOpen,
+        (newValue) => {
+            window.document.body.classList.toggle('inactive', newValue);
+        }
+    );
 </script>
 
 <style lang="scss">
@@ -41,20 +51,32 @@
 
     #root {
         display: flex;
-        min-height: 100vh;
         min-width: 100vw;
+        height: 100%;
         flex-direction: column;
+        justify-content: space-between;
         margin: 0;
         padding: 0;
-        overflow: hidden;
         max-width: 100vw;
-        background-color: $bg-color;
-        background-image: linear-gradient($bg-color, $bg-color-gradient-end);
+        &::after {
+            content: '';
+            z-index: -1;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+
+            background-color: $bg-color;
+            background-image: linear-gradient($bg-color, $bg-color-gradient-end);
+            height: 100%;
+            margin: 0;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
     }
 
     .main-content {
-        flex-grow: 3;
-        min-height: 70vh;
         display: flex;
         justify-content: center;
         align-items: center;
