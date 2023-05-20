@@ -1,32 +1,43 @@
 <template>
     <div class="member-list-container">
-        <h2>Beteiligte</h2>
         <div v-if="loading">Loading ...</div>
         <div v-else>
-            <ul class="members collection with-header">
-                <!--<li class="collection-header"><h4>Ausgaben</h4></li>-->
-                <li v-for="member in memberList" :key="member.id" class="collection-item">
+            <div class="figures card">
+                <div class="figure">
+                    <div class="number">{{ memberCount }}</div>
+                    <div class="label">Personen</div>
+                </div>
+                <hr />
+                <div class="figure">
+                    <div class="number">{{ amountPerPerson / 100 }} €</div>
+                    <div class="label">Betrag pro Person</div>
+                </div>
+            </div>
+            <h2>Offene Ausgleichszahlungen</h2>
+            <div class="card balance-transactions">
+                <template v-for="action in balanceTransactions" :key="action.key">
+                    <balance-transaction-entry
+                        :payer="memberList[action.payerId]?.name"
+                        :amount="action.amount"
+                        :receiver="memberList[action.getterId]?.name"
+                    >
+                    </balance-transaction-entry>
+                    <hr />
+                </template>
+            </div>
+
+            <h2>Beträge pro Person</h2>
+            <div class="card member-list">
+                <template v-for="member in memberList" :key="member.id">
                     <div class="member-row">
                         <span class="expense-title">{{ member.name }}</span>
-                        <span v-if="expensesByMemberId" class="title amount"
-                            ><i class="material-icons">payment</i> {{ expensesByMemberId[member.id] / 100 }} €</span
+                        <span v-if="expensesByMemberId" class="amount">
+                            {{ (expensesByMemberId[member.id] / 100) * -1 }} €</span
                         >
                     </div>
-                </li>
-            </ul>
-
-            <h2>Offene Ausgleichszahlungen</h2>
-            <p>Gesamtausgaben: {{ totalExpenseSum / 100 }} €</p>
-            <p>Anzahl Beteiligte: {{ memberCount }}</p>
-            <p>Betrag pro Person: {{ amountPerPerson / 100 }} €</p>
-
-            <h3>Wer schuldet wem was?</h3>
-            <ul>
-                <li v-for="action in balanceTransactions" :key="action.key">
-                    {{ memberList[action.payerId]?.name }} gibt {{ ((-1 * action.amount) / 100).toFixed(2) }} € an
-                    {{ memberList[action.getterId]?.name }}
-                </li>
-            </ul>
+                    <hr />
+                </template>
+            </div>
         </div>
     </div>
 </template>
@@ -36,13 +47,17 @@
     import { computed, onMounted, ref, Ref } from 'vue';
     import BalanceTransaction from './BalanceTransaction';
     import { useApiStore } from '@/stores/ApiStore';
+    import BalanceTransactionEntry from './BalanceTransactionEntry.vue';
+    import { useRouter } from 'vue-router';
 
     type ExpenseByMemberRecord = { [memberId: number]: number };
+
+    const router = useRouter();
 
     const apiStore = useApiStore();
     let loading: Ref<boolean> = ref(true);
 
-    const props = defineProps<{ groupInvite: string }>();
+    const props = defineProps<{ groupCode: string }>();
 
     const memberList: Ref<{ [key: string]: Member }> = ref({});
     let expensesByMemberId: Ref<ExpenseByMemberRecord | undefined> = ref();
@@ -51,7 +66,12 @@
 
     onMounted(async () => {
         expensesByMemberId.value = [];
-        memberList.value = await apiStore.fetchMembers(props.groupInvite);
+        const response = await apiStore.fetchMembers(props.groupCode);
+        if (response.status === 404) {
+            router.push('404');
+        }
+
+        memberList.value = response;
 
         const expenseSumPerMemberId = {};
         for (let key in memberList.value) {
@@ -59,7 +79,7 @@
             expenseSumPerMemberId[member.id] = 0;
         }
 
-        const expenseListResult = await apiStore.fetchExpenses(props.groupInvite);
+        const expenseListResult = await apiStore.fetchExpenses(props.groupCode);
         expenseListResult.forEach((expense) => {
             expenseSumPerMemberId[expense.member_id] += expense.amount;
             // Linked transactions are only returned once
@@ -253,13 +273,47 @@
 </script>
 
 <style scoped lang="scss">
+    h2,
+    h3 {
+        color: $font-light;
+    }
+
+    .figures {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        .figure {
+            color: $black-light;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .number {
+                font-size: x-large;
+            }
+        }
+    }
+    .balance-transactions,
+    .member-list {
+        gap: 0.5rem;
+
+        hr {
+            width: 100%;
+            opacity: 0.3;
+            &:last-child {
+                display: none;
+            }
+        }
+    }
     .member-list-container {
         @media (min-width: 601px) {
             width: 70%;
             margin: 0 auto;
         }
     }
-    .members.collection .collection-item {
+    .member-list {
         .member-row {
             display: flex;
             flex-wrap: wrap;
@@ -277,16 +331,13 @@
                 display: flex;
                 gap: 4px;
                 min-width: 120px;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: larger;
-                font-weight: 600;
-                margin: 1rem 0;
+                font-family: monospace;
+                font-weight: 400;
                 justify-content: flex-end;
             }
             .expense-title {
-                font-size: larger;
                 flex-basis: 50%;
-                font-weight: 600;
+                font-weight: 500;
                 @media (min-width: 600px) {
                     order: 1;
                     flex-basis: 70%;

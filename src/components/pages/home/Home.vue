@@ -1,7 +1,7 @@
 <template>
     <article class="container">
         <section class="section">
-            <h1>Hi! Let's be <span class="emph">pleite together!</span></h1>
+            <h1>Hi! Let's be pleite together!</h1>
         </section>
 
         <div class="divider"></div>
@@ -66,18 +66,11 @@
 
 <script setup lang="ts">
     import JoinRegister from './JoinRegister.vue';
-    import M from 'materialize-css';
-    import { onMounted, ref } from 'vue';
-    const datepickerEl = ref();
-
-    onMounted(() => {
-        M.AutoInit();
-        M.Datepicker.init(datepickerEl.value, {});
-    });
 </script>
 
 <style scoped lang="scss">
-    .emph {
-        color: $primary-color;
+    h1 {
+        text-align: center;
+        color: $font-light;
     }
 </style>

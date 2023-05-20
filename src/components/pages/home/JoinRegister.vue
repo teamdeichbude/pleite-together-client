@@ -1,35 +1,25 @@
 <template>
-    <section class="section">
-        <div class="row">
-            <div class="input-field col s12 l6">
-                <input
-                    id="access-code"
-                    v-model="accessCode"
-                    :class="[{ invalid: errorMessage }, 'validate']"
-                    type="text"
-                    @keypress="onKeypress"
-                />
-                <label for="access-code">Accesscode</label>
-                <span class="helper-text" :data-error="errorMessage">Gib deinen Zugangscode ein</span>
-            </div>
-            <div class="input-field col s12 l6">
-                <button
-                    ref="submitCodeLink"
-                    :disabled="accessCode === ''"
-                    class="btn waves-effect waves-light"
-                    @click.stop="accessGroup"
-                >
-                    <i class="material-icons left">subdirectory_arrow_right</i>Einer Gruppe beitreten
-                </button>
-            </div>
-        </div>
+    <section class="card gap-s">
+        <input-field
+            id="access-code"
+            label="Accesscode"
+            :error-message="errorMessage"
+            :model-value="accessCode"
+            :on-keypress="onKeypress"
+            @update:model-value="(newValue) => (accessCode = newValue)"
+        ></input-field>
+
+        <button ref="submitCodeLink" :disabled="accessCode === ''" class="" @click.stop="accessGroup">
+            Zur Gruppe
+        </button>
     </section>
 </template>
 
 <script setup lang="ts">
-    import { access } from 'fs';
+    import InputField from '@/components/InputField.vue';
+    import { useApiStore } from '@/stores/ApiStore';
     import { Ref, ref } from 'vue';
-    import { routerKey, useRouter } from 'vue-router';
+    import { useRouter } from 'vue-router';
 
     const router = useRouter();
     const accessCode = ref('');
@@ -40,14 +30,21 @@
     function accessGroup() {
         errorMessage.value = '';
 
-        fetch(`${import.meta.env.VITE_API_HOST}/groups/${accessCode.value}/`).then((response) => {
-            if (response.status > 400) {
-                errorMessage.value = 'Zu diesem Code wurde keine Gruppe gefunden. Tippfehler?';
-                return false;
-            } else {
+        useApiStore()
+            .fetchGroup(accessCode.value)
+            .then(() => {
                 router.push(`/gruppe-${accessCode.value}`);
-            }
-        });
+            })
+            .catch((reason) => {
+                errorMessage.value = 'Zu diesem Code wurde keine Gruppe gefunden. Tippfehler?';
+
+                if (reason instanceof TypeError) {
+                    errorMessage.value =
+                        'Oh je..' +
+                        ' Es gibt Probleme bei der Verbindung mit der Datenbank :(' +
+                        ' Sorry.<br><a href="mailto:kontakt@mariasoliman.de"> -> Sag Maria Bescheid</a>';
+                }
+            });
     }
 
     function onKeypress(e: KeyboardEvent) {
@@ -56,3 +53,17 @@
         }
     }
 </script>
+
+<style scoped lang="scss">
+    .card div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .error {
+        &::v-deep(a) {
+            color: $error-color;
+            text-decoration: underline;
+        }
+    }
+</style>

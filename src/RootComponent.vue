@@ -1,17 +1,6 @@
 <template>
     <div id="root" class="">
-        <nav>
-            <div class="nav-wrapper">
-                <div class="container">
-                    <div class="col s12">
-                        <router-link to="/" class="breadcrumb">Home</router-link>
-                        <router-link v-for="crumb in crumbs" :key="crumb.path" :to="crumb.to" class="breadcrumb">{{
-                            crumb.text
-                        }}</router-link>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <Navigation></Navigation>
         <main class="main-content">
             <router-view v-slot="{ Component }">
                 <transition name="fade-page" mode="out-in">
@@ -19,64 +8,32 @@
                 </transition>
             </router-view>
         </main>
-        <footer class="page-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col l6 s12">
-                        <h5>Pleite Together</h5>
-                        <p class="grey-text text-lighten-3">
-                            Minim minim eu minim mollit ea id amet non ipsum culpa Lorem magna non. Nostrud deserunt
-                            laborum cupidatat nulla est anim qui aute ea nulla qui commodo. Aliquip amet sint laboris
-                            officia ipsum exercitation adipisicing do. Ut non mollit incididunt laboris nostrud et non
-                            duis minim. Amet esse id eiusmod labore amet laborum ad cillum consectetur pariatur elit.
-                        </p>
-                    </div>
-                    <div class="col l3 s12">
-                        <h5>Der Ernst des Lebens</h5>
-                        <ul>
-                            <li><router-link to="/datenschutz">Datenschutz</router-link></li>
-                            <li><router-link to="/impressum">Impressum</router-link></li>
-                        </ul>
-                    </div>
-                    <div class="col l3 s12">
-                        <h5>Sonstiges</h5>
-                        <ul>
-                            <li>
-                                <a href="#!">Lokale Daten löschen</a>
-                            </li>
-                            <li><a href="mailto:deichbu@lucaelsen.de">Kontakt</a></li>
-                        </ul>
-                    </div>
-                </div>
+        <footer>
+            <div>Made with 💛 by <a href="https://deichbu.de">deichbu.de</a></div>
+
+            <div class="hide">
+                <h5>Pleite Together</h5>
+                <p class="grey-text text-lighten-3">
+                    Minim minim eu minim mollit ea id amet non ipsum culpa Lorem magna non. Nostrud deserunt laborum
+                    cupidatat nulla est anim qui aute ea nulla qui commodo. Aliquip amet sint laboris officia ipsum
+                    exercitation adipisicing do. Ut non mollit incididunt laboris nostrud et non duis minim. Amet esse
+                    id eiusmod labore amet laborum ad cillum consectetur pariatur elit.
+                </p>
             </div>
-            <div class="footer-copyright">
-                <div class="container">Made with 💛 by <a href="https://deichbu.de">deichbu.de</a></div>
+
+            <div>
+                <ul>
+                    <li><router-link to="/datenschutz">Datenschutz</router-link></li>
+                    <li><router-link to="/impressum">Impressum</router-link></li>
+                    <li><a href="mailto:kontakt@mariasoliman.de">Kontakt</a></li>
+                </ul>
             </div>
         </footer>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { computed, Ref } from 'vue';
-    import { useRoute } from 'vue-router';
-
-    const route = useRoute();
-
-    const crumbs: Ref<any[]> = computed(() => {
-        let pathArray = route.path.split('/');
-        pathArray.shift();
-        let breadcrumbs = pathArray.reduce((breadcrumbArray, path, idx) => {
-            const test = breadcrumbArray as any[];
-            test.push({
-                path: path,
-                // @ts-ignore
-                to: breadcrumbArray[idx - 1] ? '/' + breadcrumbArray[idx - 1].path + '/' + path : '/' + path,
-                text: route.matched[idx]?.meta?.breadCrumb || path,
-            });
-            return breadcrumbArray;
-        }, []);
-        return breadcrumbs;
-    });
+    import Navigation from './components/Navigation.vue';
 </script>
 
 <style lang="scss">
@@ -92,20 +49,45 @@
         overflow: hidden;
         max-width: 100vw;
         background-color: $bg-color;
-    }
-
-    .nav-wrapper {
-        background-color: $header-bg-color;
+        background-image: linear-gradient($bg-color, $bg-color-gradient-end);
     }
 
     .main-content {
         flex-grow: 3;
         min-height: 70vh;
         display: flex;
+        justify-content: center;
         align-items: center;
+        margin: 6rem 1.5rem 3rem 1.5rem;
     }
 
-    .footer {
-        flex-grow: 1;
+    footer {
+        padding: 10px 20px;
+        color: $header-bg-color;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+
+        ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            li {
+                padding: 0 10px;
+                margin: 0;
+            }
+        }
+
+        a {
+            color: $link-color;
+        }
+        a:active,
+        a:hover {
+            color: $black;
+            text-decoration: none;
+        }
     }
 </style>

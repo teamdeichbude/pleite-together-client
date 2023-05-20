@@ -1,12 +1,21 @@
 @use 'sass:color';
-$primary-color: #dc4e4f;
-$bg-color: #ffe8dc;
-$header-bg-color: #dc4e4f;
+
+$white: #fcfcfc;
+$black: #444444;
+$black-light: color.scale($black, $lightness: 15%);
+$black-lighter: color.scale($black, $lightness: 30%);
+
+$primary-color: #2ec0ae;
+$bg-color: #65cb92;
+$bg-color-gradient-end: #2ec0ae;
+$header-bg-color: $white;
+$bg-color-light: $white;
+$font-light: $white;
 
 $primary-color-light: color.scale($primary-color, $lightness: 30%) !default;
 $primary-color-dark: color.scale($primary-color, $lightness: -30%) !default;
 
 $secondary-color: $header-bg-color !default;
-$success-color: #4edcad !default;
-$error-color: #dc4e4f !default;
+$success-color: #65cb92 !default;
+$error-color: #c84558 !default;
 $link-color: #eeeab5 !default;

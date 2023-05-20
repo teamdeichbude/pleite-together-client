@@ -1,40 +1,42 @@
 //example for importing custom fonts
 
-// $font_path: '@/assets/fonts/';
+$font_path: '@/assets/fonts/';
 
-// @supports (font-variation-settings: 'wdth' 200) {
-//     @font-face {
-//       font-family: 'Exo2';
-//       src: url($font_path + 'Exo2-VariableFont_wght.ttf');
-//       font-weight: normal;
-//       font-style: normal;
-//     }
-//   }
+@font-face {
+    font-family: 'Fredoka';
+    font-weight: 400;
+    src: url($font_path + 'Fredoka-Regular.ttf') format('truetype');
+}
 
-// @font-face {
-//     font-family: "Koerber-Bold";
-//     font-style: normal;
-//     font-weight: 300;
-//     src: url($font_path + 'Koerber-Bold.otf') format("opentype");
-// }
+@font-face {
+    font-family: 'Fredoka';
+    font-weight: 300;
+    src: url($font_path + 'Fredoka-Light.ttf') format('truetype');
+}
 
-// @font-face {
-//     font-family: "Koerber-Regular";
-//     font-style: normal;
-//     font-weight: 300;
-//     src: url($font_path + 'Koerber-Regular.otf') format("opentype");
-// }
+@font-face {
+    font-family: 'Fredoka';
+    font-weight: 500;
+    src: url($font_path + 'Fredoka-Medium.ttf') format('truetype');
+}
 
-// @font-face {
-//     font-family: "Koerber-Light";
-//     font-style: normal;
-//     font-weight: 300;
-//     src: url($font_path + 'Koerber-Light.otf') format("opentype");
-// }
+@font-face {
+    font-family: 'Fredoka';
+    font-weight: 600;
+    src: url($font_path + 'Fredoka-SemiBold.ttf') format('truetype');
+}
 
-// @font-face {
-//     font-family: "Koerber-Semibold";
-//     font-style: normal;
-//     font-weight: 300;
-//     src: url($font_path + 'Koerber-Semibold.otf') format("opentype");
-// }
+@font-face {
+    font-family: 'Fredoka';
+    font-weight: 700;
+    src: url($font_path + 'Fredoka-Bold.ttf') format('truetype');
+}
+
+@supports (font-variation-settings: 'wdth' 200) {
+    @font-face {
+        font-family: 'Fredoka';
+        src: url($font_path + 'Fredoka-VariableFont.ttf');
+        font-weight: normal;
+        font-style: normal;
+    }
+}

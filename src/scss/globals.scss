@@ -1,8 +1,13 @@
 @import '@/scss/_mixins.scss';
 @import '@/scss/fonts.scss';
-@import '/node_modules/materialize-css/sass/materialize.scss';
 
 @include set-selection-colors(white, blue);
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
 :root {
     /*  font rem units are relative to this size. 
@@ -13,7 +18,7 @@
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.5s;
+    transition: opacity 1.5s;
 }
 
 .fade-enter-from,
@@ -21,27 +26,18 @@
     opacity: 0;
 }
 
-.fade-page-enter-active,
+.fade-page-enter-active {
+    transition: opacity 1s 0.2s, transform 0.7s ease-out;
+}
 .fade-page-leave-active {
-    transition: opacity 0.3s, transform 0.3s ease-in-out;
+    transition: opacity 0.4s 0.1s, transform 0.5s ease-out;
 }
 
 .fade-page-enter-from {
     opacity: 0;
-    transform: translateX(300px);
+    transform: translateY(300px);
 }
 .fade-page-leave-to {
-    opacity: 0;
-    transform: translateX(-300px);
-}
-
-.fade-slow-enter-active,
-.fade-slow-leave-active {
-    transition: opacity 1.9s;
-}
-
-.fade-slow-enter-from,
-.fade-slow-leave-to {
     opacity: 0;
 }
 
@@ -67,17 +63,94 @@ body {
     padding: 0;
     width: 100%;
     overflow-x: hidden;
+    font-family: 'Fredoka';
+    color: $black;
 }
 
 h1 {
     font-size: calculate-rem(36) !important;
-    font-weight: 500;
 }
 
 h2 {
     font-size: calculate-rem(30) !important;
 }
 
-.btn {
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 400;
+}
+
+button,
+input[type='submit'] {
+    font-family: 'Fredoka';
     background-color: $primary-color !important;
+    border-radius: 100rem;
+    color: $white;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 1rem;
+    -webkit-appearance: none;
+}
+
+a {
+    color: $primary-color-dark;
+    text-decoration: none;
+    &:hover {
+        color: $primary-color;
+        text-decoration: underline;
+    }
+}
+
+.hide {
+    display: none;
+}
+
+.card {
+    background-color: $bg-color-light;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+input,
+select {
+    font-family: 'Fredoka';
+    border: 1px solid $primary-color-dark;
+    border-radius: 100px;
+    font-size: 16px;
+    padding: 1rem;
+    color: $black;
+    &:focus-visible {
+        border-color: $primary-color;
+        outline-color: $primary-color;
+    }
+    &.error {
+        border-color: $error-color;
+    }
+}
+
+.helper-text {
+    font-size: 0.8rem;
+    color: $black-lighter;
+    &.error {
+        color: $error-color;
+    }
+}
+input + .helper-text {
+    margin: 1rem;
+    margin-top: 0.5rem;
+}
+
+.gap-s {
+    gap: 1rem;
 }

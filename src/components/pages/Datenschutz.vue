@@ -1,16 +1,14 @@
 <template>
-    <article class="container">
-        <section class="section">
-            <p class="flow-text">
+    <article>
+        <section>
+            <p>
                 Auch wenn es sich bei dieser Seite um eine nicht geschäftliche Seite handelt, stelle ich im Folgenden
                 eine Datenschutzerklärung bereit. Zögern sich im Falle von Problemen oder Nachfragen nicht den
                 Webseitenbetreiber zu kontaktieren:
                 <a href="mailto:deichbu@lucaelsen.de" target="_blank">deichbu@lucaelsen.de</a>
             </p>
 
-            <p class="flow-text red-text">
-                Auf dieser Seite werden keine persönlichen Nutzerdaten bezogen oder verarbeitet.
-            </p>
+            <p class="highlight">Auf dieser Seite werden keine persönlichen Nutzerdaten bezogen oder verarbeitet.</p>
 
             <h1>Datenschutzerkl&auml;rung</h1>
             <h2>1. Datenschutz auf einen Blick</h2>
@@ -243,3 +241,13 @@
         </section>
     </article>
 </template>
+
+<style scoped lang="scss">
+    article {
+        width: 100%;
+        .highlight {
+            color: $black;
+            background-color: $bg-color-light;
+        }
+    }
+</style>

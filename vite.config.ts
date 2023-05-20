@@ -1,4 +1,3 @@
-import packageInfo from './package.json';
 import path from 'path';
 import SvgLoader from 'vite-svg-loader';
 import ViteRestart from 'vite-plugin-restart';
@@ -22,7 +21,7 @@ export default ({ command, mode }) => {
         server: {
             host: true,
             https: false,
-            port: 8080, // vite default is 3000, takes the next available if 8080 is taken
+            port: 8081, // vite default is 3000, takes the next available if 8080 is taken
         },
 
         // resolve src folder alias
