@@ -108,9 +108,9 @@
             return [];
         });
         expenseListResult.forEach((expense) => {
-            if (expense.amount > 0) {
+            if (expense.receiving_member_id === undefined && expense.amount > 0) {
                 totalExpenses.value -= expense.amount;
-            } else {
+            } else if (expense.receiving_member_id === undefined) {
                 totalGains.value -= expense.amount;
             }
 
