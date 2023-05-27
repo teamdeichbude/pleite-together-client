@@ -177,3 +177,16 @@ input + .helper-text {
 .full-width {
     width: 100%;
 }
+
+.amount,
+.number {
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+hr {
+    width: 100%;
+    opacity: 0.3;
+    &.vertical {
+        width: auto;
+    }
+}

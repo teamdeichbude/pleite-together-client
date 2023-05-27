@@ -22,11 +22,11 @@
                             label="Betrag (EUR)"
                             suffix="EUR"
                             input-type="text"
-                            placeholder="15,00 oder einfach 15"
-                            pattern="[0-9]{1,}(,[0-9]{2})?"
+                            placeholder="15,00, 15.00 oder einfach 15"
+                            pattern="[0-9]{1,}([,.][0-9]{2})?"
                             :title="
-                                'Der Betrag in Euro, mit Komma vor den Cents.' +
-                                'Z.B.: 1,20 oder 5,00 oder auch einfach 5'
+                                'Der Betrag in Euro, mit Komma oder Punkt vor den Cents.' +
+                                'Z.B.: 1,20 oder 5.00 oder auch einfach 5'
                             "
                             required
                             :model-value="amount"
@@ -36,6 +36,7 @@
                         <input-field
                             id="new-expense-title"
                             label="Titel"
+                            :max-length="100"
                             required
                             :model-value="title"
                             @update:model-value="(newValue) => (title = newValue)"
@@ -201,13 +202,13 @@
         const receiverKey = switchPayerAndReceiver ? 'memberId' : 'receivingMemberId';
         const newNameReceiverKey = switchPayerAndReceiver ? 'newMemberName' : 'receivingMemberName';
 
-        let requestAmount = amount.value * 100;
+        let requestAmount = parseFloat(amount.value.replace(',', '.')) * 100;
         if (expenseType.value == availableTypes.income.key) {
             requestAmount *= -1;
         }
 
         const requestBody = {
-            amount: requestAmount,
+            amount: requestAmount.toFixed(0),
             title: title.value,
             paidAt: paidAtISODateTimeString.value,
         };

@@ -24,7 +24,7 @@
     import NewExpenseButton from './NewExpenseButton.vue';
 
     const route = useRoute();
-    const error = ref(null);
+    const error = ref<null | any>(null);
 
     const groupId: ComputedRef<string> = computed(() => {
         useApiStore()

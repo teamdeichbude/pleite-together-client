@@ -10,7 +10,6 @@ import moment from 'moment/min/moment-with-locales';
 moment.locale('de');
 
 const router = createRouter({
-    // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
     history: createWebHistory(),
     routes: routeConfiguration, // short for `routes: routes`
     scrollBehavior() {

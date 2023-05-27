@@ -8,10 +8,11 @@
                 :class="[{ error: errorMessage }, 'validate']"
                 :placeholder="placeholder"
                 :pattern="pattern"
+                :maxlength="maxLength"
                 :required="required"
                 :title="title"
                 :type="inputType ? inputType : 'text'"
-                @input="$emit('update:modelValue', $event.target.value)"
+                @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
                 @keypress="onKeypress"
             />
         </div>
@@ -30,6 +31,7 @@
         label: string;
         modelValue;
         required?: boolean;
+        maxLength?: number;
         placeholder?: string;
         pattern?: string;
         errorMessage?: string;

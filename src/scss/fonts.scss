@@ -40,3 +40,9 @@ $font_path: '@/assets/fonts/';
         font-style: normal;
     }
 }
+
+@font-face {
+    font-family: 'Ubuntu Mono';
+    font-weight: 400;
+    src: url($font_path + 'UbuntuMono-Regular.ttf') format('truetype');
+}

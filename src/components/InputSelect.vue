@@ -7,7 +7,7 @@
                 :value="modelValue"
                 class="browser-default"
                 :required="required"
-                @input="$emit('update:modelValue', $event.target.value)"
+                @input="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
             >
                 <option disabled value="">{{ placeholder }}</option>
                 <option v-for="option in availableOptions" :key="option.key" :value="option.key">
@@ -29,7 +29,7 @@
         id: string;
         label: string;
         modelValue;
-        availableOptions: { string: { key: string; value: string } };
+        availableOptions: Record<string, { key: string; value: string }>;
         placeholder: string;
         required?: boolean;
         errorMessage?: string;

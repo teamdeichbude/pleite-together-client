@@ -2,18 +2,34 @@
     <div class="member-list-container">
         <div v-if="loading">Loading ...</div>
         <div v-else>
+            <div class="figures card expense-overview">
+                <div class="figure expense small">
+                    <div class="number">{{ formatToEur(totalExpenses / 100) }}</div>
+                    <div class="label">Ausgaben</div>
+                </div>
+                <div class="figure gain small">
+                    <div class="number">{{ formatToEur(totalGains / 100) }}</div>
+                    <div class="label">Einnahmen</div>
+                </div>
+                <hr />
+                <div class="figure">
+                    <div class="number">{{ formatToEur((totalExpenseSum / 100) * -1) }}</div>
+                    <div class="label">Gesamt</div>
+                </div>
+            </div>
+
+            <h2>Offene Ausgleichszahlungen</h2>
             <div class="figures card">
                 <div class="figure">
                     <div class="number">{{ memberCount }}</div>
                     <div class="label">Personen</div>
                 </div>
-                <hr />
+                <hr class="vertical" />
                 <div class="figure">
-                    <div class="number">{{ amountPerPerson / 100 }} €</div>
+                    <div class="number">{{ formatToEur(amountPerPerson / 100) }}</div>
                     <div class="label">Betrag pro Person</div>
                 </div>
             </div>
-            <h2>Offene Ausgleichszahlungen</h2>
             <div class="card balance-transactions">
                 <template v-for="action in balanceTransactions" :key="action.key">
                     <balance-transaction-entry
@@ -24,6 +40,9 @@
                     </balance-transaction-entry>
                     <hr />
                 </template>
+                <template v-if="balanceTransactions === undefined || balanceTransactions.length === 0">
+                    Alles ausgeglichen! :)
+                </template>
             </div>
 
             <h2>Beträge pro Person</h2>
@@ -32,8 +51,14 @@
                     <div class="member-row">
                         <span class="expense-title">{{ member.name }}</span>
                         <span v-if="expensesByMemberId" class="amount">
-                            {{ (expensesByMemberId[member.id] / 100) * -1 }} €</span
-                        >
+                            {{
+                                formatToEur(
+                                    expensesByMemberId[member.id] !== 0
+                                        ? (expensesByMemberId[member.id] / 100) * -1
+                                        : expensesByMemberId[member.id] / 100
+                                )
+                            }}
+                        </span>
                     </div>
                     <hr />
                 </template>
@@ -49,6 +74,7 @@
     import { useApiStore } from '@/stores/ApiStore';
     import BalanceTransactionEntry from './BalanceTransactionEntry.vue';
     import { useRouter } from 'vue-router';
+    import formatToEur from '@/helpers/currencyFormatter';
 
     type ExpenseByMemberRecord = { [memberId: number]: number };
 
@@ -62,25 +88,32 @@
     const memberList: Ref<{ [key: string]: Member }> = ref({});
     let expensesByMemberId: Ref<ExpenseByMemberRecord | undefined> = ref();
 
-    let totalExpenseSum: Ref<number> = ref(0);
+    const totalExpenseSum: Ref<number> = ref(0);
+    const totalExpenses: Ref<number> = ref(0);
+    const totalGains: Ref<number> = ref(0);
 
     onMounted(async () => {
         expensesByMemberId.value = [];
-        const response = await apiStore.fetchMembers(props.groupCode);
-        if (response.status === 404) {
+        memberList.value = await apiStore.fetchMembers(props.groupCode, true).catch((error) => {
             router.push('404');
-        }
-
-        memberList.value = response;
+            return {};
+        });
 
         const expenseSumPerMemberId = {};
         for (let key in memberList.value) {
             const member = memberList.value[key];
             expenseSumPerMemberId[member.id] = 0;
         }
-
-        const expenseListResult = await apiStore.fetchExpenses(props.groupCode);
+        const expenseListResult = await apiStore.fetchExpenses(props.groupCode, true).catch((err) => {
+            return [];
+        });
         expenseListResult.forEach((expense) => {
+            if (expense.amount > 0) {
+                totalExpenses.value -= expense.amount;
+            } else {
+                totalGains.value -= expense.amount;
+            }
+
             expenseSumPerMemberId[expense.member_id] += expense.amount;
             // Linked transactions are only returned once
             // -> Need to manually add a second entry for the receiver
@@ -285,16 +318,46 @@
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 1rem;
+        margin-bottom: 1rem;
+
         .figure {
             color: $black-light;
             display: flex;
             flex-direction: column;
             align-items: center;
             .number {
-                font-size: x-large;
+                font-size: larger;
+            }
+
+            &.small {
+                font-size: small;
+                .number {
+                    font-size: medium;
+                }
+            }
+
+            &.expense {
+                color: $red;
+            }
+            &.gain {
+                color: $green;
             }
         }
     }
+
+    .expense-overview {
+        flex-direction: column;
+        gap: 0.5rem;
+        .figure {
+            flex-direction: row;
+            justify-content: space-between;
+
+            .number {
+                order: 2;
+            }
+        }
+    }
+
     .balance-transactions,
     .member-list {
         gap: 0.5rem;
@@ -331,8 +394,6 @@
                 display: flex;
                 gap: 4px;
                 min-width: 120px;
-                font-family: monospace;
-                font-weight: 400;
                 justify-content: flex-end;
             }
             .expense-title {

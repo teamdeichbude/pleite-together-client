@@ -3,7 +3,7 @@
         <div class="title-row">
             <div class="expense-title">{{ expenseTitle }}</div>
             <div>
-                <span class="amount"> {{ amount * -1 }}€ </span>
+                <span class="amount"> {{ formatToEur((amount / 100) * -1) }} </span>
             </div>
         </div>
 
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
     import { getCurrentInstance } from 'vue';
+    import formatToEur from '@/helpers/currencyFormatter';
 
     const internalInstance = getCurrentInstance();
 
@@ -70,8 +71,7 @@
         justify-content: flex-end;
         gap: 4px;
         min-width: 120px;
-        font-family: monospace;
-        font-weight: 500;
+        font-size: large;
     }
     .expense-title {
         flex-basis: 100%;

@@ -3,7 +3,7 @@
         <div v-if="expenseList" class="expenses-container">
             <div v-for="expense in expenseList" :key="expense.id">
                 <ExpenseCard
-                    :amount="toDecimalEuro(expense.amount)"
+                    :amount="expense.amount"
                     :member-name="expense.member_name"
                     :paid-at="expense.expense_paid_at"
                     :expense-title="expense.title"
@@ -32,10 +32,6 @@
             expenseList.value = apiStore.getExpensesSortedByExpenseDate;
         });
     });
-
-    function toDecimalEuro(value: number) {
-        return value / 100;
-    }
 </script>
 
 <style scoped lang="scss">
