@@ -35,6 +35,7 @@
             })
             .catch((reason) => {
                 errorMessage.value = 'Zu diesem Code wurde keine Gruppe gefunden. Tippfehler?';
+                console.error(reason);
 
                 if (reason instanceof TypeError) {
                     errorMessage.value =

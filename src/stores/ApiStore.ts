@@ -73,6 +73,7 @@ export const useApiStore = defineStore('api', {
             });
         },
         fetchGroup(groupCode: string): Promise<Group | undefined> {
+            console.log(`${import.meta.env.VITE_API_HOST}/groups/${groupCode}/`);
             return new Promise((resolve, reject) => {
                 fetch(`${import.meta.env.VITE_API_HOST}/groups/${groupCode}/`)
                     .then((response) => {
