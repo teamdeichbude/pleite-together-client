@@ -9,6 +9,8 @@ RUN npm install
 
 COPY . .
 
+ENV VITE_API_HOST=${VITE_API_HOST}
+
 RUN npm run build
 
 # Stage 2: Serve with Nginx
